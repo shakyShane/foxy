@@ -1,0 +1,35 @@
+{
+  "name": "foxy",
+  "version": "0.0.1",
+  "description": "Proxy with response modding",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --recursive test/specs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shakyShane/foxy"
+  },
+  "keywords": [
+    "proxy"
+  ],
+  "author": "Shane Osbourne",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shakyShane/foxy/issues"
+  },
+  "homepage": "https://github.com/shakyShane/foxy",
+  "dependencies": {
+    "resp-modifier": "0.0.4",
+    "http-proxy": "^1.1.4"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "sinon": "^1.9.1",
+    "mocha": "^1.18.2",
+    "gulp-jshint": "^1.5.5",
+    "gulp": "^3.6.2",
+    "connect": "^2.15.0",
+    "supertest": "^0.12.1"
+  }
+}
