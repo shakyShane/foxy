@@ -30,6 +30,8 @@
     "gulp-jshint": "^1.5.5",
     "gulp": "^3.6.2",
     "connect": "^2.15.0",
-    "supertest": "^0.12.1"
+    "supertest": "^0.12.1",
+    "socket.io": "^0.9.16",
+    "socket.io-client": "^0.9.16"
   }
 }

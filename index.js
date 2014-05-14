@@ -1,4 +1,3 @@
-
 var lrSnippet = require("resp-modifier");
 var httpProxy = require("http-proxy");
 var http      = require("http");
@@ -7,7 +6,7 @@ var utils     = require("./lib/utils");
 
 function init(opts, proxyUrl) {
 
-    var proxy      = httpProxy.createProxyServer();
+    var proxy      = httpProxy.createProxyServer({ws: true, target: opts.target});
     var middleware = lrSnippet({rules: [utils.rewriteLinks(opts, proxyUrl)]});
 
     var server = http.createServer(function(req, res) {

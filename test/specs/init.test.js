@@ -5,6 +5,8 @@ var utils = require("../../lib/utils");
 
 var assert  = require("chai").assert;
 var request = require("supertest");
+var socket  = require("socket.io");
+var client  = require("socket.io-client");
 var http    = require("http");
 var path    = require("path");
 var fs      = require("fs");
@@ -25,7 +27,7 @@ var fixtures = path.resolve("test/fixtures");
 
 describe("Init", function(){
 
-    var proxy, server;
+    var proxy, server, socketio;
 
     beforeEach("init(): ", function(){
 
@@ -36,10 +38,34 @@ describe("Init", function(){
         server = http.createServer(testApp).listen(8000);
 
         proxy = foxy.init(opts, "localhost:3000");
+
+        socketio = socket.listen(proxy);
+
     });
 
     afterEach(function () {
         server.close();
+    });
+
+    it("should also proxy websockets", function(done){
+
+        var clientSockets = client.connect("http://localhost:3000", {"force new connection": true});
+        clientSockets.emit("shane", {name:"shane"});
+
+        request(proxy)
+            .get("/socket.io/socket.io.js")
+            .expect(200)
+            .end(function (err, res) {
+                done();
+            })
+    });
+    it("should serve the socket IO script", function(done){
+        request(proxy)
+            .get("/socket.io/socket.io.js")
+            .expect(200)
+            .end(function (err, res) {
+                done();
+            })
     });
     it("http://localhost:8000", function (done) {
         request(proxy)
