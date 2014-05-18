@@ -4,7 +4,7 @@ var utils = require("../../lib/utils");
 
 var assert = require("chai").assert;
 
-describe("Hnadle redirects", function () {
+describe("Handle redirects", function () {
     var opts;
     beforeEach(function () {
         opts = {

@@ -39,7 +39,7 @@ describe("Init", function(){
 
         proxy = foxy.init(opts, "localhost:3000");
 
-        socketio = socket.listen(proxy);
+        socketio = socket.listen(proxy, {log: false});
 
     });
 
