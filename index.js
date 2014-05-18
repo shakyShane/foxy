@@ -6,11 +6,12 @@ var utils     = require("./lib/utils");
 
 /**
  * @param opts
- * @param proxyUrl
+ * @param proxy
  * @param [additionalRules]
+ * @param [additionalMiddleware]
  * @returns {*}
  */
-function init(opts, proxy, additionalRules) {
+function init(opts, proxy, additionalRules, additionalMiddleware) {
 
     var proxyHost = proxy.host + ":" + proxy.port;
     var proxyServer      = httpProxy.createProxyServer({ws: true, target: opts.target});
@@ -27,8 +28,19 @@ function init(opts, proxy, additionalRules) {
                 }
             });
         };
-        utils.handleIe(req);
-        middleware(req, res, next);
+
+        if (additionalMiddleware) {
+            additionalMiddleware(req, res, function (success) {
+                if (success) {
+                    return;
+                }
+                utils.handleIe(req);
+                middleware(req, res, next);
+            });
+        } else {
+            utils.handleIe(req);
+            middleware(req, res, next);
+        }
     });
 
     // Remove headers
