@@ -32,7 +32,7 @@ describe("Init", function() {
         // Fake server
         server = http.createServer(testApp).listen(8000);
 
-        proxy = foxy.init(opts, "localhost:5000");
+        proxy = foxy.init(opts, {host: "localhost", port: 5000});
 
         proxy.listen(5000);
 

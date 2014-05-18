@@ -29,7 +29,7 @@ describe("Init", function(){
         // Fake server
         server = http.createServer(testApp).listen(8000);
 
-        proxy = foxy.init(opts, "localhost:3000", {
+        proxy = foxy.init(opts, {host: "localhost", port: 3000}, {
             match: /Link here/g,
             fn: function () {
                 return "SHANE";
