@@ -14,8 +14,9 @@ var utils     = require("./lib/utils");
 function init(opts, proxy, additionalRules, additionalMiddleware) {
 
     var proxyHost = proxy.host + ":" + proxy.port;
-    var proxyServer      = httpProxy.createProxyServer({ws: true, target: opts.target});
-    var middleware = respMod({
+    var proxyServer = httpProxy.createProxyServer();
+    var hostHeader  = utils.getProxyHost(opts);
+    var middleware  = respMod({
         rules: getRules()
     });
 
@@ -23,8 +24,10 @@ function init(opts, proxy, additionalRules, additionalMiddleware) {
 
         var next = function () {
             proxyServer.web(req, res, {
+                target: opts.target,
                 headers: {
-                    host: utils.getProxyHost(opts)
+                    host: hostHeader,
+                    agent: false
                 }
             });
         };
