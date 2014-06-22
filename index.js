@@ -53,6 +53,9 @@ function init(opts, proxy, additionalRules, additionalMiddleware, errHandler) {
         }
     }).on("error", errHandler);
 
+    // Handle proxy errors
+    proxyServer.on("error", errHandler);
+
     // Remove headers
     proxyServer.on("proxyRes", function (res) {
         if (res.statusCode === 302) {
