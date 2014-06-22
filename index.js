@@ -11,11 +11,18 @@ var utils     = require("./lib/utils");
  * @param [additionalMiddleware]
  * @returns {*}
  */
-function init(opts, proxy, additionalRules, additionalMiddleware) {
+function init(opts, proxy, additionalRules, additionalMiddleware, errHandler) {
 
     var proxyHost = proxy.host + ":" + proxy.port;
     var proxyServer = httpProxy.createProxyServer();
     var hostHeader  = utils.getProxyHost(opts);
+
+    if (!errHandler) {
+        errHandler = function (err) {
+            console.log(err.message);
+        }
+    }
+
     var middleware  = respMod({
         rules: getRules()
     });
@@ -44,7 +51,7 @@ function init(opts, proxy, additionalRules, additionalMiddleware) {
             utils.handleIe(req);
             middleware(req, res, next);
         }
-    });
+    }).on("error", errHandler);
 
     // Remove headers
     proxyServer.on("proxyRes", function (res) {
