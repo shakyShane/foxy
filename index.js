@@ -29,13 +29,12 @@ function init(opts, proxy, additionalRules, additionalMiddleware, errHandler) {
 
     var server = http.createServer(function(req, res) {
 
-        req.headers["accept-encoding"] = "identity";
-
         var next = function () {
             proxyServer.web(req, res, {
                 target: opts.target,
                 headers: {
                     host: hostHeader,
+                    "accept-encoding": "identity",
                     agent: false
                 }
             });
