@@ -49,7 +49,7 @@ describe("Init", function(){
             .expect(200)
             .end(function (err, res) {
                 done();
-            })
+            });
     });
     it("http://localhost:", function (done) {
         request(proxy)
