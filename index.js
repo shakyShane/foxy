@@ -1,7 +1,6 @@
 var respMod   = require("resp-modifier");
 var httpProxy = require("http-proxy");
 var http      = require("http");
-
 var utils     = require("./lib/utils");
 
 /**
@@ -62,15 +61,25 @@ function init(opts, additionalRules, additionalMiddleware, errHandler) {
         var origin;
 
         if (res.statusCode === 302) {
-
+            
             if (typeof res.req._headers.origin === "string") {
                 origin = require("url").parse(res.req._headers.origin);
             } else {
                 origin = res.req._headers.origin;
             }
 
-            res.headers.location = utils.handleRedirect(res.headers.location, opts, origin.host);
+            /**
+             * @type {String}
+             */
+            res.headers.location = utils.handleRedirect(
+                res.headers.location,
+                opts,
+                origin && origin.host
+                    ? origin.host
+                    : opts.host + ":" + opts.port
+            );
         }
+
         utils.removeHeaders(res.headers, ["content-length", "content-encoding"]);
     });
 

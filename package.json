@@ -1,6 +1,6 @@
 {
   "name": "foxy",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Proxy with response modding",
   "main": "index.js",
   "scripts": {
@@ -35,6 +35,8 @@
     "sinon": "^1.9.1",
     "socket.io": "^0.9.16",
     "socket.io-client": "^0.9.16",
-    "supertest": "^0.12.1"
+    "supertest": "^0.12.1",
+    "lodash": "^2.4.1",
+    "multiline": "^1.0.1"
   }
 }

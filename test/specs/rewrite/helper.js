@@ -16,7 +16,7 @@ module.exports.start = function (_string, _url, done) {
     ports.getPorts(1).then(function (ports) {
         port = ports[0];
         var servers = proxy();
-        done(ports[0], servers.proxy, servers.socketio);
+        done(ports[0], servers.proxy, servers.socketio, servers.app);
     }).catch(function (err) {
         console.log(err);
     });
@@ -46,7 +46,9 @@ function proxy () {
 
     return {
         proxy: proxy,
-        socketio: socketio
+        socketio: socketio,
+        server: server,
+        app: testApp
     };
 }
 
