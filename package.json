@@ -1,6 +1,6 @@
 {
   "name": "foxy",
-  "version": "0.2.1",
+  "version": "2.0.2",
   "description": "Proxy with response modding",
   "main": "index.js",
   "scripts": {
@@ -20,19 +20,23 @@
   },
   "homepage": "https://github.com/shakyShane/foxy",
   "dependencies": {
-    "resp-modifier": "^0.1.0",
-    "http-proxy": "^1.1.6"
+    "http-proxy": "^1.1.6",
+    "resp-modifier": "^0.1.2"
   },
   "devDependencies": {
+    "browser-sync": "^1.5.2",
     "chai": "^1.9.1",
-    "sinon": "^1.9.1",
-    "mocha": "^1.18.2",
-    "gulp-jshint": "^1.5.5",
-    "gulp": "^3.6.2",
     "connect": "^2.15.0",
-    "supertest": "^0.12.1",
+    "connect-gzip": "^0.1.6",
+    "gulp": "^3.6.2",
+    "gulp-jshint": "^1.5.5",
+    "mocha": "^1.18.2",
+    "portscanner-plus": "^0.1.0",
+    "sinon": "^1.9.1",
     "socket.io": "^0.9.16",
     "socket.io-client": "^0.9.16",
-    "connect-gzip": "^0.1.6"
+    "supertest": "^0.12.1",
+    "lodash": "^2.4.1",
+    "multiline": "^1.0.1"
   }
 }

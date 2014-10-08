@@ -1,19 +1,17 @@
 var respMod   = require("resp-modifier");
 var httpProxy = require("http-proxy");
 var http      = require("http");
-
 var utils     = require("./lib/utils");
 
 /**
  * @param opts
- * @param proxy
  * @param [additionalRules]
  * @param [additionalMiddleware]
  * @returns {*}
+ * @param errHandler
  */
-function init(opts, proxy, additionalRules, additionalMiddleware, errHandler) {
+function init(opts, additionalRules, additionalMiddleware, errHandler) {
 
-    var proxyHost = proxy.host + ":" + proxy.port;
     var proxyServer = httpProxy.createProxyServer();
     var hostHeader  = utils.getProxyHost(opts);
 
@@ -23,11 +21,11 @@ function init(opts, proxy, additionalRules, additionalMiddleware, errHandler) {
         }
     }
 
-    var middleware  = respMod({
-        rules: getRules()
-    });
-
     var server = http.createServer(function(req, res) {
+
+        var middleware  = respMod({
+            rules: getRules(req.headers.host)
+        });
 
         var next = function () {
             proxyServer.web(req, res, {
@@ -59,15 +57,35 @@ function init(opts, proxy, additionalRules, additionalMiddleware, errHandler) {
 
     // Remove headers
     proxyServer.on("proxyRes", function (res) {
+
+        var origin;
+
         if (res.statusCode === 302) {
-            res.headers.location = utils.handleRedirect(res.headers.location, opts, proxyHost);
+            
+            if (typeof res.req._headers.origin === "string") {
+                origin = require("url").parse(res.req._headers.origin);
+            } else {
+                origin = res.req._headers.origin;
+            }
+
+            /**
+             * @type {String}
+             */
+            res.headers.location = utils.handleRedirect(
+                res.headers.location,
+                opts,
+                origin && origin.host
+                    ? origin.host
+                    : opts.host + ":" + opts.port
+            );
         }
+
         utils.removeHeaders(res.headers, ["content-length", "content-encoding"]);
     });
 
-    function getRules() {
+    function getRules(host) {
 
-        var rules = [utils.rewriteLinks(opts, proxyHost)];
+        var rules = [utils.rewriteLinks(opts, host)];
 
         if (additionalRules) {
             if (Array.isArray(additionalRules)) {
