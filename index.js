@@ -58,8 +58,17 @@ function init(opts, additionalRules, additionalMiddleware, errHandler) {
 
     // Remove headers
     proxyServer.on("proxyRes", function (res) {
+
+        var origin;
+
         if (res.statusCode === 302) {
-            var origin = require("url").parse(res.req._headers.origin);
+
+            if (typeof res.req._headers.origin === "string") {
+                origin = require("url").parse(res.req._headers.origin);
+            } else {
+                origin = res.req._headers.origin;
+            }
+
             res.headers.location = utils.handleRedirect(res.headers.location, opts, origin.host);
         }
         utils.removeHeaders(res.headers, ["content-length", "content-encoding"]);
