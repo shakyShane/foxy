@@ -14,6 +14,7 @@ function init(opts, additionalRules, additionalMiddleware, errHandler) {
 
     var proxyServer = httpProxy.createProxyServer();
     var hostHeader  = utils.getProxyHost(opts);
+    var host = false;
 
     if (!errHandler) {
         errHandler = function (err) {
@@ -22,6 +23,10 @@ function init(opts, additionalRules, additionalMiddleware, errHandler) {
     }
 
     var server = http.createServer(function(req, res) {
+
+        if (!host) {
+            host = req.headers.host;
+        }
 
         var middleware  = respMod({
             rules: getRules(req.headers.host)
@@ -58,29 +63,13 @@ function init(opts, additionalRules, additionalMiddleware, errHandler) {
     // Remove headers
     proxyServer.on("proxyRes", function (res) {
 
-        var origin;
-
-        if (res.statusCode === 302) {
-            
-            if (typeof res.req._headers.origin === "string") {
-                origin = require("url").parse(res.req._headers.origin);
-            } else {
-                origin = res.req._headers.origin;
-            }
-
-            /**
-             * @type {String}
-             */
-            res.headers.location = utils.handleRedirect(
-                res.headers.location,
-                opts,
-                origin && origin.host
-                    ? origin.host
-                    : opts.host + ":" + opts.port
-            );
+        if (res.statusCode === 302 || res.statusCode === 301) {
+            res.headers.location = res.headers.location.replace(opts.host, host);
         }
 
         utils.removeHeaders(res.headers, ["content-length", "content-encoding"]);
+
+        host = false;
     });
 
     function getRules(host) {
