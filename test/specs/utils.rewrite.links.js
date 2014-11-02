@@ -24,7 +24,7 @@ describe("Rewriting Domains", function () {
         it("should not replace domains that are not inside attribute", function () {
             var actual = testRegex("<h1>example.com</h1>");
             var expected = "<h1>example.com</h1>";
-            assert.equal(actual, expected);
+            assert.equal(expected, actual);
         });
         it("should replace CSS LINK", function () {
             var actual = testRegex("<link href='http://example.com/css/styles'>example.com</link>");

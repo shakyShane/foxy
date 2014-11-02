@@ -27,7 +27,7 @@ function proxy () {
     var testApp = connect();
 
     testApp.use(url, function (req, res, next) {
-        res.end(string.replace("URL", "localhost:" + port));
+        res.end(string.replace(/URL/g, "localhost:" + port));
     });
 
     // Fake server

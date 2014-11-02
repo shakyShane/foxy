@@ -7,7 +7,7 @@ var multi   = require("multiline");
 
 var helper = require("./helper");
 
-describe("Init", function(){
+describe("Responsive images solution", function(){
 
     var proxy, socketio, port, base;
 
@@ -17,7 +17,8 @@ describe("Init", function(){
          src="URL/v2/wp-content/uploads/2013/11/banner-402x134.jpg"
          data-sizes="auto"
          data-srcset="URL/v2/wp-content/uploads/2013/11/ride-banner-402x134.jpg 402w,
-         URL/v2/wp-content/uploads/2013/11/ride-banner-960x320.jpg 960w,
+         URL/v2/wp-content/uploads/2013/11/ride-banner-960x320.jpg
+
          URL/v2/wp-content/uploads/2013/11/ride-banner-1920x640.jpg 1920w
          " alt="">
          */});
