@@ -14,6 +14,7 @@ var utils     = require("./lib/utils");
 function init(opts, additionalRules, additionalMiddleware, errHandler) {
 
     var urlObj      = url.parse(opts);
+    var target      = urlObj.protocol + "//" + urlObj.hostname + ":" + urlObj.port;
 
     var proxyServer = httpProxy.createProxyServer();
     var hostHeader  = utils.getProxyHost(urlObj);
@@ -37,7 +38,7 @@ function init(opts, additionalRules, additionalMiddleware, errHandler) {
 
         var next = function () {
             proxyServer.web(req, res, {
-                target: urlObj.href,
+                target: target,
                 headers: {
                     host: hostHeader,
                     "accept-encoding": "identity",
