@@ -63,8 +63,13 @@ function init(opts, additionalRules, additionalMiddleware, errHandler) {
     // Remove headers
     proxyServer.on("proxyRes", function (res) {
 
+        var override = opts.host;
+
         if (res.statusCode === 302 || res.statusCode === 301) {
-            res.headers.location = res.headers.location.replace(opts.host, host);
+            if (opts.port !== 80 && opts.port !== 443) {
+                override = opts.host + ':' + opts.port;
+            }
+            res.headers.location = res.headers.location.replace(override, host);
         }
 
         utils.removeHeaders(res.headers, ["content-length", "content-encoding"]);
