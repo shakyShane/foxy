@@ -64,7 +64,13 @@ function init(opts, additionalRules, additionalMiddleware, errHandler) {
     proxyServer.on("proxyRes", function (res) {
 
         if (res.statusCode === 302 || res.statusCode === 301) {
-            res.headers.location = res.headers.location.replace(opts.host, host);
+            if (opts.port == 80 || opts.port == 443) {
+              var match = opts.host;
+            }
+            else {
+              var match = opts.host + ':' + opts.port;
+            }
+            res.headers.location = res.headers.location.replace(match, host);
         }
 
         utils.removeHeaders(res.headers, ["content-length", "content-encoding"]);
