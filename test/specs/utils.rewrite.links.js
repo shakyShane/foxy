@@ -13,7 +13,7 @@ describe("Rewriting Domains", function () {
         var regex, fn;
         var testRegex;
         before(function () {
-            var rewrite = utils.rewriteLinks({host: "example.com", port: 80}, proxyUrl);
+            var rewrite = utils.rewriteLinks({hostname: "example.com", port: 80}, proxyUrl);
             regex = rewrite.match;
             fn = rewrite.fn;
             testRegex = function (string) {
@@ -79,7 +79,7 @@ describe("Rewriting Domains", function () {
         var regex, fn;
         var testRegex;
         before(function () {
-            var rewrite = utils.rewriteLinks({host: "localhost:8000", port: 80}, proxyUrl);
+            var rewrite = utils.rewriteLinks({hostname: "localhost:8000", port: 80}, proxyUrl);
             regex = rewrite.match;
             fn = rewrite.fn;
             testRegex = function (string) {

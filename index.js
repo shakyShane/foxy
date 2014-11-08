@@ -1,6 +1,7 @@
 var respMod   = require("resp-modifier");
 var httpProxy = require("http-proxy");
 var http      = require("http");
+var url       = require("url");
 var utils     = require("./lib/utils");
 
 /**
@@ -12,8 +13,10 @@ var utils     = require("./lib/utils");
  */
 function init(opts, additionalRules, additionalMiddleware, errHandler) {
 
+    var urlObj      = url.parse(opts);
+
     var proxyServer = httpProxy.createProxyServer();
-    var hostHeader  = utils.getProxyHost(opts);
+    var hostHeader  = utils.getProxyHost(urlObj);
     var host = false;
 
     if (!errHandler) {
@@ -34,7 +37,7 @@ function init(opts, additionalRules, additionalMiddleware, errHandler) {
 
         var next = function () {
             proxyServer.web(req, res, {
-                target: opts.target,
+                target: urlObj.href,
                 headers: {
                     host: hostHeader,
                     "accept-encoding": "identity",
@@ -63,11 +66,11 @@ function init(opts, additionalRules, additionalMiddleware, errHandler) {
     // Remove headers
     proxyServer.on("proxyRes", function (res) {
 
-        var override = opts.host;
+        var override = opts.hostname;
 
         if (res.statusCode === 302 || res.statusCode === 301) {
-            if (opts.port !== 80 && opts.port !== 443) {
-                override = opts.host + ':' + opts.port;
+            if (urlObj.port !== 80 && urlObj.port !== 443) {
+                override = urlObj.hostname + ':' + urlObj.port;
             }
             res.headers.location = res.headers.location.replace(override, host);
         }
@@ -79,7 +82,7 @@ function init(opts, additionalRules, additionalMiddleware, errHandler) {
 
     function getRules(host) {
 
-        var rules = [utils.rewriteLinks(opts, host)];
+        var rules = [utils.rewriteLinks(urlObj, host)];
 
         if (additionalRules) {
             if (Array.isArray(additionalRules)) {

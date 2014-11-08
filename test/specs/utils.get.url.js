@@ -8,7 +8,7 @@ describe("getProxyUrl(): ", function(){
     it("should return a full url", function () {
         var opts = {
             protocol: "http",
-            host: "localhost",
+            hostname: "localhost",
             port: 80
         };
         var actual   = getProxyUrl(opts);
