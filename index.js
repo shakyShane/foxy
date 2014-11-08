@@ -14,7 +14,11 @@ var utils     = require("./lib/utils");
 function init(opts, additionalRules, additionalMiddleware, errHandler) {
 
     var urlObj      = url.parse(opts);
-    var target      = urlObj.protocol + "//" + urlObj.hostname + ":" + urlObj.port;
+    var target      = urlObj.protocol + "//" + urlObj.hostname;
+
+    if (urlObj.port) {
+        target += ":" + urlObj.port;
+    }
 
     var proxyServer = httpProxy.createProxyServer();
     var hostHeader  = utils.getProxyHost(urlObj);
@@ -67,10 +71,10 @@ function init(opts, additionalRules, additionalMiddleware, errHandler) {
     // Remove headers
     proxyServer.on("proxyRes", function (res) {
 
-        var override = opts.hostname;
+        var override = urlObj.hostname;
 
         if (res.statusCode === 302 || res.statusCode === 301) {
-            if (urlObj.port !== 80 && urlObj.port !== 443) {
+            if (urlObj.port && urlObj.port !== 443) {
                 override = urlObj.hostname + ':' + urlObj.port;
             }
             res.headers.location = res.headers.location.replace(override, host);
