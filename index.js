@@ -36,9 +36,9 @@ function init(target, config) {
         if (!host) {
             host = req.headers.host;
         }
-
         var middleware  = respMod({
-            rules: getRules(req.headers.host)
+            rules: getRules(req.headers.host),
+            ignorePaths: config.ignorePaths
         });
 
         var next = function () {

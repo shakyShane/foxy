@@ -1,6 +1,6 @@
 {
   "name": "foxy",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Proxy with response modding",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   "homepage": "https://github.com/shakyShane/foxy",
   "dependencies": {
     "http-proxy": "^1.1.6",
-    "resp-modifier": "^0.1.2"
+    "resp-modifier": "^1.0.0"
   },
   "devDependencies": {
     "browser-sync": "^1.5.2",
