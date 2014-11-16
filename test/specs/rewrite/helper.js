@@ -33,7 +33,7 @@ function proxy () {
     // Fake server
     server = http.createServer(testApp).listen(port);
 
-    var proxy = foxy.init("http://localhost:" + port);
+    var proxy = foxy("http://localhost:" + port);
 
     var socketio = socket.listen(proxy, {log: false});
 

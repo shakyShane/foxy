@@ -1,5 +1,22 @@
-var foxy = require("./index");
+var foxy    = require("./index");
+var request = require("supertest");
 
-var proxy = foxy.init("http://localhost/site1").listen(8002,function () {
-    console.log("Foxy running at http://localhost:" + proxy.address().port);
-});
+var config = {
+    rules: {
+        match: /virtual host/,
+        fn: function (match) {
+            return "Browser Sync " + match
+        }
+    }
+}
+
+var proxy = foxy("http://localhost/site1", config);
+
+request(proxy)
+    .get("/")
+    .set("accept", "text/html")
+    .expect(200)
+    .end(function (err, res) {
+        console.log(res.text);
+    });
+

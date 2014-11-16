@@ -11,9 +11,10 @@ var utils     = require("./lib/utils");
  * @returns {*}
  * @param errHandler
  */
-function init(opts, additionalRules, additionalMiddleware, errHandler) {
+function init(target, config) {
 
-    var urlObj      = url.parse(opts);
+    config = config || {};
+    var urlObj      = url.parse(target);
     var target      = urlObj.protocol + "//" + urlObj.hostname;
 
     if (urlObj.port) {
@@ -24,8 +25,8 @@ function init(opts, additionalRules, additionalMiddleware, errHandler) {
     var hostHeader  = utils.getProxyHost(urlObj);
     var host = false;
 
-    if (!errHandler) {
-        errHandler = function (err) {
+    if (!config.errHandler) {
+        config.errHandler = function (err) {
             console.log(err.message);
         }
     }
@@ -51,8 +52,8 @@ function init(opts, additionalRules, additionalMiddleware, errHandler) {
             });
         };
 
-        if (additionalMiddleware) {
-            additionalMiddleware(req, res, function (success) {
+        if (config.middleware) {
+            config.middleware(req, res, function (success) {
                 if (success) {
                     return;
                 }
@@ -63,10 +64,10 @@ function init(opts, additionalRules, additionalMiddleware, errHandler) {
             utils.handleIe(req);
             middleware(req, res, next);
         }
-    }).on("error", errHandler);
+    }).on("error", config.errHandler);
 
     // Handle proxy errors
-    proxyServer.on("error", errHandler);
+    proxyServer.on("error", config.errHandler);
 
     // Remove headers
     proxyServer.on("proxyRes", function (res) {
@@ -89,13 +90,13 @@ function init(opts, additionalRules, additionalMiddleware, errHandler) {
 
         var rules = [utils.rewriteLinks(urlObj, host)];
 
-        if (additionalRules) {
-            if (Array.isArray(additionalRules)) {
-                additionalRules.forEach(function (rule) {
+        if (config.rules) {
+            if (Array.isArray(config.rules)) {
+                config.rules.forEach(function (rule) {
                     rules.push(rule);
                 })
             } else {
-                rules.push(additionalRules);
+                rules.push(config.rules);
             }
         }
         return rules;
@@ -104,7 +105,6 @@ function init(opts, additionalRules, additionalMiddleware, errHandler) {
     return server;
 }
 
-module.exports = {
-    init: init
-};
+module.exports      = init;
+module.exports.init = init;
 
