@@ -39,7 +39,7 @@ describe("Responsive images solution", function(){
             .set("accept", "text/html")
             .expect(200)
             .end(function (err, res) {
-                var expected = base.replace(/URL/g, res.req._headers.host);
+                var expected = base.replace(/URL/g, "//" + res.req._headers.host);
                 assert.equal(expected, res.text);
                 done();
             });

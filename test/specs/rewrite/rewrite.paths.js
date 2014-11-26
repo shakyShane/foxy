@@ -36,7 +36,7 @@ describe("Init", function(){
             .set("accept", "text/html")
             .expect(200)
             .end(function (err, res) {
-                var expected = base.replace("URL", res.req._headers.host);
+                var expected = base.replace("URL", "//" + res.req._headers.host);
                 assert.equal(res.text, expected);
                 done();
             });
