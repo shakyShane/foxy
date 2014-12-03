@@ -5,13 +5,21 @@ var http      = require("http");
 var multi     = require("multiline");
 
 var config = {
-    rules: {
-        match: /Hi there/,
-        fn: function (match) {
-            return "Browser Sync " + match
+    rules: [
+        {
+            match: /Hi there/,
+            fn: function (match) {
+                return "Browser Sync " + match
+            }
+        },
+        {
+            match: /<body>/,
+            fn: function (match) {
+                return "<BODY>";
+            }
         }
-    }
-}
+    ]
+};
 
 var app    = connect();
 var output = multi(function () {/*
@@ -41,7 +49,6 @@ request(proxy)
     .expect(200)
     .end(function (err, res) {
         console.log(res.text);
-        console.log(res.text.indexOf("Browser Sync") === -1);
         server.close();
     });
 
