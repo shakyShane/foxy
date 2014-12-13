@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/shakyShane/foxy",
   "dependencies": {
-    "http-proxy": "^1.1.6",
+    "http-proxy": "^1.7.3",
     "resp-modifier": "^1.0.0"
   },
   "devDependencies": {

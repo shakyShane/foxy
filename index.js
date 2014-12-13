@@ -5,17 +5,15 @@ var url       = require("url");
 var utils     = require("./lib/utils");
 
 /**
- * @param opts
- * @param [additionalRules]
- * @param [additionalMiddleware]
- * @returns {*}
- * @param errHandler
+ * @param {String} target - a url such as http://www.bbc.co.uk or http://localhost:8181
+ * @param {Object} config
+ * @returns {http.Server}
  */
 function init(target, config) {
 
     config = config || {};
     var urlObj      = url.parse(target);
-    var target      = urlObj.protocol + "//" + urlObj.hostname;
+    target          = urlObj.protocol + "//" + urlObj.hostname;
 
     if (urlObj.port) {
         target += ":" + urlObj.port;
@@ -44,10 +42,11 @@ function init(target, config) {
         var next = function () {
             proxyServer.web(req, res, {
                 target: target,
+                hostRewrite: req.headers.host,
                 headers: {
-                    host: hostHeader,
+                    "host": hostHeader,
                     "accept-encoding": "identity",
-                    agent: false
+                    "agent": false
                 }
             });
         };
@@ -71,18 +70,7 @@ function init(target, config) {
 
     // Remove headers
     proxyServer.on("proxyRes", function (res) {
-
-        var override = urlObj.hostname;
-
-        if (res.statusCode === 302 || res.statusCode === 301) {
-            if (urlObj.port && urlObj.port !== 443) {
-                override = urlObj.hostname + ':' + urlObj.port;
-            }
-            res.headers.location = res.headers.location.replace(override, host);
-        }
-
         utils.removeHeaders(res.headers, ["content-length", "content-encoding"]);
-
         host = false;
     });
 
