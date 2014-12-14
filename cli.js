@@ -3,7 +3,7 @@ var meow   = require("meow");
 var devip  = require("dev-ip").getIp();
 var logger = require("./lib/logger");
 var foxy   = require("./");
-var help   = require("fs").readFileSync("./help.txt", "utf8");
+var help   = require("fs").readFileSync(__dirname + "/help.txt", "utf8");
 
 var cli = meow({
     help: help

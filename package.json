@@ -1,6 +1,6 @@
 {
   "name": "foxy",
-  "version": "6.1.0",
+  "version": "7.0.0-rc2",
   "description": "Proxy with response modding",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,9 @@
     "examples",
     "lib",
     "index.js",
-    "readme.md"
+    "readme.md",
+    "cli.js",
+    "help.txt"
   ],
   "keywords": [
     "proxy"

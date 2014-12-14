@@ -2,7 +2,23 @@
 
 Proxy with response moddin'
 
-##Simple usage
+##cli
+First, install globally
+```bash
+$ npm install -g foxy
+```
+
+Then, if you wanted to proxy a local vhost such as `http://magento.dev` run:
+```bash
+$ foxy http://magento.dev
+```
+
+A random port will be used, but if you want to provide your own:
+```bash
+$ foxy http://magento.dev --port 3000
+```
+
+##api
 ```js
 var foxy = require("foxy");
 
