@@ -1,15 +1,14 @@
-"use strict";
-
-
-var assert  = require("chai").assert;
-var request = require("supertest");
-var multi   = require("multiline");
-
-var helper = require("./helper");
+var assert      = require("chai").assert;
+var request     = require("supertest");
+var connect     = require("connect");
+var http        = require("http");
+var multi       = require("multiline");
+var foxy        = require("../../../");
+var getUrl      = require("./helpers").getUrl;
 
 describe("Init", function(){
 
-    var proxy, socketio, port, base;
+    var base, app, server, serverUrl;
 
     before(function (done) {
         base = multi.stripIndent(function () {/*
@@ -17,19 +16,20 @@ describe("Init", function(){
          <a href="URL/some/long/path?hi=there"></a>
          </html>
          */});
-        helper.start(base, "/links.html", function (_port, _proxy, _socketio) {
-            port = _port;
-            proxy = _proxy;
-            socketio = _socketio;
-            done();
+        app       = connect();
+        server    = http.createServer(app).listen();
+        serverUrl = getUrl(server.address().port);
+        app.use("/links.html", function (req, res) {
+            res.end(base.replace(/URL/g, serverUrl));
         });
+        done();
     });
 
     after(function () {
-        helper.reset();
+        server.close();
     });
     it("http://localhost:", function (done) {
-        request(proxy)
+        request(foxy(serverUrl))
             .get("/links.html")
             .set("accept", "text/html")
             .expect(200)

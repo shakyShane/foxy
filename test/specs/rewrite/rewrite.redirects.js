@@ -1,49 +1,36 @@
-"use strict";
-
-
+var connect = require("connect");
 var assert  = require("chai").assert;
-var request = require("supertest");
-var multi   = require("multiline");
+var http    = require("http");
+var foxy    = require("../../../index");
 
-var helper = require("./helper");
+describe("Redirects", function() {
 
-describe("Handling redirects", function(){
-
-    var proxy, socketio, port, base;
+    var proxy, port, app, server;
 
     before(function (done) {
-        base = multi.stripIndent(function () {/*
-         <html>
-         <a href="URL/some/long/path?hi=there"></a>
-         </html>
-         */});
-        helper.start(base, "/links.html", function (_port, _proxy, _socketio, server) {
-            port = _port;
-            proxy = _proxy;
-            proxy.listen();
-            socketio = _socketio;
-            server.use("/hello", function (req, res, next) {
-                res.writeHead(301, {
-                    "location" : "http://localhost:" + port + "/shane"
-                });
-                res.end();
-                next();
-            });
-            done();
+        app = connect();
+        server = http.createServer(app).listen();
+        port = server.address().port;
+        app.use("/redirect", function (req, res, next) {
+            res.writeHead(302, {"Location": "http://127.0.0.1:" + port + "/nope"});
+            res.end();
+            next();
         });
+        proxy = foxy("http://127.0.0.1:" + port).listen();
+        done();
     });
 
     after(function () {
-        helper.reset();
+        server.close();
+        proxy.close();
     });
-    it("Correctly rewrites headers following a redirect", function (done) {
+
+    it("Should re-write redirect headers to stay on proxy", function (done) {
         var proxyPort = proxy.address().port;
-        request(proxy)
-            .get("/hello")
-            .set("accept", "text/html")
-            .end(function (err, res) {
-                assert.equal(res.headers.location, "http://127.0.0.1:"+proxyPort+"/shane");
-                done();
-            });
+        http.get("http://localhost:" + proxyPort  + "/redirect", function (res) {
+            assert.equal(res.statusCode, 302);
+            assert.equal(res.headers["location"], "http://localhost:"+proxyPort+"/nope");
+            done();
+        });
     });
 });
