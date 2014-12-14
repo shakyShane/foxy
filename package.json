@@ -12,6 +12,12 @@
     "type": "git",
     "url": "https://github.com/shakyShane/foxy"
   },
+  "files": [
+    "examples",
+    "lib",
+    "index.js",
+    "readme.md"
+  ],
   "keywords": [
     "proxy"
   ],

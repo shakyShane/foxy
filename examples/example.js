@@ -1,4 +1,4 @@
-var foxy      = require("./index");
+var foxy      = require("./../index");
 var request   = require("supertest");
 var connect   = require("connect");
 var http      = require("http");
