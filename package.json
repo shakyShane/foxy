@@ -4,7 +4,7 @@
   "description": "Proxy with response modding",
   "main": "index.js",
   "scripts": {
-    "lint": "jshint lib/* test/*",
+    "lint": "jshint lib/* test/specs/*",
     "unit": "mocha --recursive test/specs",
     "test": "npm run lint && npm run unit"
   },
@@ -44,6 +44,8 @@
     "chai": "^1.9.1",
     "connect": "^2.15.0",
     "connect-gzip": "^0.1.6",
+    "gulp": "^3.8.10",
+    "gulp-traceur": "^0.14.1",
     "jshint": "^2.5.10",
     "lodash": "^2.4.1",
     "mocha": "^1.18.2",
@@ -52,6 +54,7 @@
     "sinon": "^1.9.1",
     "socket.io": "^0.9.16",
     "socket.io-client": "^0.9.16",
+    "stream-combiner2": "^1.0.2",
     "supertest": "^0.12.1"
   }
 }

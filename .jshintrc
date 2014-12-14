@@ -1,7 +1,7 @@
 {
   "curly": true,
   "eqeqeq": true,
-  "immed": true,
+  "immed": false,
   "laxbreak": false,
   "latedef": "nofunc",
   "newcap": true,

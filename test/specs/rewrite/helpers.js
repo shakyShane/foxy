@@ -9,5 +9,8 @@ module.exports = {
     },
     expectedUrl: function (base, host) {
         return base.replace("URL", "//" + host + "/");
+    },
+    stripSchema: function (host) {
+        return "//" + host + "/";
     }
 };
