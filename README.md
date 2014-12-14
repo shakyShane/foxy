@@ -1,4 +1,4 @@
-##Foxy [![Build Status](https://travis-ci.org/shakyShane/foxy.svg?branch=master)](https://travis-ci.org/shakyShane/foxy)
+##Foxy [![Build Status](https://travis-ci.org/shakyShane/foxy.svg?branch=master)](https://travis-ci.org/shakyShane/foxy) [![Coverage Status](https://img.shields.io/coveralls/shakyShane/foxy.svg)](https://coveralls.io/r/shakyShane/foxy?branch=master)
 
 Proxy with response moddin'
 

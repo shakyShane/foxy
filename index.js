@@ -37,8 +37,8 @@ function foxy(target, userConfig) {
     /**
      * Handle proxy errors
      */
-    proxy.on("error", config.get("errHandler"));
-    server.on("error",      config.get("errHandler"));
+    proxy.on("error",  config.get("errHandler"));
+    server.on("error", config.get("errHandler"));
 
     /**
      * Modify Proxy responses

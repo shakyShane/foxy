@@ -48,7 +48,7 @@ request(proxy)
     .set("accept", "text/html")
     .expect(200)
     .end(function (err, res) {
-        console.log(res.text);
+        //console.log(res.text);
         server.close();
     });
 

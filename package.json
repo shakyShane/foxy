@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "jshint lib/*",
     "unit": "mocha --recursive test/specs",
-    "cover": "istanbul cover _mocha --report lcovonly -- -R spec --timeout 10000 --recursive ./test/specs && istanbul-coveralls",
+    "cover": "npm run lint && istanbul cover _mocha --report lcovonly -- -R spec --timeout 10000 --recursive ./test/specs && istanbul-coveralls",
     "test": "npm run lint && npm run unit"
   },
   "repository": {
