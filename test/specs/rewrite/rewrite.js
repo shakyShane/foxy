@@ -1,10 +1,8 @@
 "use strict";
 
-
 var assert  = require("chai").assert;
 var request = require("supertest");
 var client  = require("socket.io-client");
-var http    = require("http");
 var multi   = require("multiline");
 
 var helper = require("./helper");
@@ -39,15 +37,15 @@ describe("Init", function(){
         request(proxy)
             .get("/socket.io/socket.io.js")
             .expect(200)
-            .end(function (err, res) {
+            .end(function () {
                 done();
-            })
+            });
     });
     it("should serve the socket IO script", function(done){
         request(proxy)
             .get("/socket.io/socket.io.js")
             .expect(200)
-            .end(function (err, res) {
+            .end(function () {
                 done();
             });
     });

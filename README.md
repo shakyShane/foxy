@@ -13,4 +13,8 @@ var proxy = foxy("http://www.bbc.co.uk").listen(8000);
 Built-in middleware will re-write html on the fly to update any urls & there'll also be the option
 for additional rules for the re-writing.
 
+#TODO
+
+- [ ] https
+
 

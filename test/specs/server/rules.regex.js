@@ -26,13 +26,13 @@ describe("giving custom regex rules", function () {
             rules: {
                 match: /Hi there/,
                 fn: function (match) {
-                    return "Browser Sync " + match
+                    return "Browser Sync " + match;
                 }
             }
-        }
+        };
         path = "/test";
         app    = connect();
-        app.use(path, function (req, res, next) {
+        app.use(path, function (req, res) {
             res.end(output);
         });
         server = http.createServer(app).listen();
@@ -50,6 +50,6 @@ describe("giving custom regex rules", function () {
                 assert.include(res.text, "Browser Sync");
                 done();
             });
-    })
+    });
 });
 

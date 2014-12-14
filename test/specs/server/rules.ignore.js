@@ -22,17 +22,17 @@ describe("Ignoring certain paths", function () {
     var config, app, server, proxy, path;
     before(function () {
         config = {
-            rules: {
+            rules: [{
                 match: /Hi there/,
                 fn: function (match) {
-                    return "Browser Sync " + match
+                    return "Browser Sync " + match;
                 }
-            },
+            }],
             ignorePaths: "templates/*.html"
-        }
+        };
         path = "/templates/page1.html";
         app    = connect();
-        app.use(path, function (req, res, next) {
+        app.use(path, function (req, res) {
             res.end(output);
         });
         server = http.createServer(app).listen();
@@ -50,6 +50,6 @@ describe("Ignoring certain paths", function () {
                 assert.notInclude(res.text, "Browser Sync");
                 done();
             });
-    })
+    });
 });
 

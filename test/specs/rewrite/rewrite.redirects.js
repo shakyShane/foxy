@@ -3,7 +3,6 @@
 
 var assert  = require("chai").assert;
 var request = require("supertest");
-var http    = require("http");
 var multi   = require("multiline");
 
 var helper = require("./helper");

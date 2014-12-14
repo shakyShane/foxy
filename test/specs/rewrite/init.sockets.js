@@ -1,8 +1,4 @@
-"use strict";
-
-
 var request = require("supertest");
-var http    = require("http");
 var multi   = require("multiline");
 
 var helper = require("./helper");
@@ -22,7 +18,7 @@ describe("Init", function(){
             proxy = _proxy;
             socketio = _socketio;
             _app.use("/redirect", function (req, res, next) {
-                res.writeHead(302, {'Location': 'http://127.0.0.1:' + port + "/nope"});
+                res.writeHead(302, {"Location": "http://127.0.0.1:" + port + "/nope"});
                 res.end();
                 next();
             });
@@ -41,9 +37,6 @@ describe("Init", function(){
     it("should handle redirects", function (done) {
         request(proxy)
             .get("/redirect")
-            .expect(302)
-            .end(function (err, res) {
-                done();
-            });
+            .expect(302, done);
     });
 });

@@ -1,98 +1,56 @@
-var respMod   = require("resp-modifier");
-var httpProxy = require("http-proxy");
-var http      = require("http");
-var url       = require("url");
-var utils     = require("./lib/utils");
+/**
+ *
+ * Foxy - proxy with response moddin'
+ * https://github.com/shakyShane/foxy
+ *
+ */
+
+var httpProxy  = require("http-proxy");
+var http       = require("http");
+
+var conf       = require("./lib/config");
+var foxyServer = require("./lib/server");
+var utils      = require("./lib/utils");
 
 /**
  * @param {String} target - a url such as http://www.bbc.co.uk or http://localhost:8181
- * @param {Object} config
+ * @param {Object} [userConfig]
  * @returns {http.Server}
  */
-function init(target, config) {
+function foxy(target, userConfig) {
 
-    config = config || {};
-    var urlObj      = url.parse(target);
-    target          = urlObj.protocol + "//" + urlObj.hostname;
+    /**
+     * Merge/transform config with defaults
+     */
+    var config = conf(target, userConfig);
 
-    if (urlObj.port) {
-        target += ":" + urlObj.port;
-    }
+    /**
+     * Create basic httpProxy server
+     */
+    var proxy = httpProxy.createProxyServer();
 
-    var proxyServer = httpProxy.createProxyServer();
-    var hostHeader  = utils.getProxyHost(urlObj);
-    var host = false;
+    /**
+     * Create HTTP server & pass proxyServer for parsing
+     */
+    var server = http.createServer(foxyServer(proxy, config));
 
-    if (!config.errHandler) {
-        config.errHandler = function (err) {
-            console.log(err.message);
-        }
-    }
+    /**
+     * Handle proxy errors
+     */
+    proxy.on("error", config.get("errHandler"));
+    server.on("error",      config.get("errHandler"));
 
-    var server = http.createServer(function(req, res) {
+    /**
+     * Modify Proxy responses
+     */
+    proxy.on("proxyRes", utils.proxyRes(config));
 
-        if (!host) {
-            host = req.headers.host;
-        }
-        var middleware  = respMod({
-            rules: getRules(req.headers.host),
-            ignorePaths: config.ignorePaths
-        });
-
-        var next = function () {
-            proxyServer.web(req, res, {
-                target: target,
-                hostRewrite: req.headers.host,
-                headers: {
-                    "host": hostHeader,
-                    "accept-encoding": "identity",
-                    "agent": false
-                }
-            });
-        };
-
-        if (config.middleware) {
-            config.middleware(req, res, function (success) {
-                if (success) {
-                    return;
-                }
-                utils.handleIe(req);
-                middleware(req, res, next);
-            });
-        } else {
-            utils.handleIe(req);
-            middleware(req, res, next);
-        }
-    }).on("error", config.errHandler);
-
-    // Handle proxy errors
-    proxyServer.on("error", config.errHandler);
-
-    // Remove headers
-    proxyServer.on("proxyRes", function (res) {
-        utils.removeHeaders(res.headers, ["content-length", "content-encoding"]);
-        host = false;
-    });
-
-    function getRules(host) {
-
-        var rules = [utils.rewriteLinks(urlObj, host)];
-
-        if (config.rules) {
-            if (Array.isArray(config.rules)) {
-                config.rules.forEach(function (rule) {
-                    rules.push(rule);
-                })
-            } else {
-                rules.push(config.rules);
-            }
-        }
-        return rules;
-    }
-
+    /**
+     * return the proxy server ready for .listen();
+     */
     return server;
 }
 
-module.exports      = init;
-module.exports.init = init;
+module.exports = foxy;
+module.exports.init = foxy; // backwards compatibility
 

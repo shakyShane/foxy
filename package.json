@@ -4,7 +4,9 @@
   "description": "Proxy with response modding",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --recursive test/specs"
+    "lint": "jshint lib/* test/*",
+    "unit": "mocha --recursive test/specs",
+    "test": "npm run lint && npm run unit"
   },
   "repository": {
     "type": "git",
@@ -20,7 +22,9 @@
   },
   "homepage": "https://github.com/shakyShane/foxy",
   "dependencies": {
+    "cookie": "^0.1.2",
     "http-proxy": "^1.7.3",
+    "immutable": "^3.3.0",
     "resp-modifier": "^1.0.0"
   },
   "devDependencies": {
@@ -28,15 +32,14 @@
     "chai": "^1.9.1",
     "connect": "^2.15.0",
     "connect-gzip": "^0.1.6",
-    "gulp": "^3.6.2",
-    "gulp-jshint": "^1.5.5",
+    "jshint": "^2.5.10",
+    "lodash": "^2.4.1",
     "mocha": "^1.18.2",
+    "multiline": "^1.0.1",
     "portscanner-plus": "^0.1.0",
     "sinon": "^1.9.1",
     "socket.io": "^0.9.16",
     "socket.io-client": "^0.9.16",
-    "supertest": "^0.12.1",
-    "lodash": "^2.4.1",
-    "multiline": "^1.0.1"
+    "supertest": "^0.12.1"
   }
 }
