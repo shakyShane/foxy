@@ -118,5 +118,10 @@ describe("Rewriting Domains", () => {
             var expected = "<a href='//192.168.0.4:3002/sub/dir'></a>";
             assert.equal(actual, expected);
         });
+        it("should use the regex to replace links that contain hashes", () => {
+            var actual = testRegex("<a href='http://localhost:8000/sub/dir/#search'></a>");
+            var expected = "<a href='//192.168.0.4:3002/sub/dir/#search'></a>";
+            assert.equal(actual, expected);
+        });
     });
 });
