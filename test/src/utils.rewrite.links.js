@@ -129,7 +129,6 @@ describe("Rewriting Domains", () => {
             assert.equal(actual, expected);
         });
         it("should use the regex to replace links that contain hashes (2)", () => {
-        it("should use the regex to replace links that contain hashes (2)", () => {
             var getBase = function (host) {
                 return `
 <ul class="navigation__items">
@@ -158,6 +157,20 @@ describe("Rewriting Domains", () => {
             var expected = getBase("//" + proxyUrl);
             var rewrite  = utils.rewriteLinks({hostname: "www.example.local.colinr.com", port: 80}, proxyUrl);
             var actual   = original.replace(rewrite.match, rewrite.fn);
+            assert.equal(actual, expected);
+        });
+        it("should use the regex to replace links that contain port + ", () => {
+            var input = `
+<a href="http://example.com:1234/foo">Link 1</a>
+<a href="http://example.com.gov/foo">Link 1</a>
+`;
+            var expected = `
+<a href="//${proxyUrl}/foo">Link 1</a>
+<a href="http://example.com.gov/foo">Link 1</a>
+`;
+            var rewrite  = utils.rewriteLinks({hostname: "example.com", port: 1234}, proxyUrl);
+            var actual   = input.replace(rewrite.match, rewrite.fn);
+
             assert.equal(actual, expected);
         });
     });
