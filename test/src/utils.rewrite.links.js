@@ -118,5 +118,47 @@ describe("Rewriting Domains", () => {
             var expected = "<a href='//192.168.0.4:3002/sub/dir'></a>";
             assert.equal(actual, expected);
         });
+        it("should use the regex to replace links that contain hashes (1)", () => {
+            var actual = testRegex("<a href='http://localhost:8000/sub/dir/?search=some#shane'></a>");
+            var expected = "<a href='//192.168.0.4:3002/sub/dir/?search=some#shane'></a>";
+            assert.equal(actual, expected);
+        });
+        it("should use the regex to replace links that contain hashes (2)", () => {
+            var actual = testRegex("<a href='http://localhost:8000/sub/dir/#search'></a>");
+            var expected = "<a href='//192.168.0.4:3002/sub/dir/#search'></a>";
+            assert.equal(actual, expected);
+        });
+        it("should use the regex to replace links that contain hashes (2)", () => {
+        it("should use the regex to replace links that contain hashes (2)", () => {
+            var getBase = function (host) {
+                return `
+<ul class="navigation__items">
+    <li class="navigation__items__page">
+        <a href="${host}/careers/?number=4">« Previous</a>
+    </li>
+    <li class="navigation__items__page">
+        <a href="${host}/careers/#search">1</a>
+    </li>
+    <li class="navigation__items__page">
+        <a href="${host}/careers/?number=2#search">2</a>
+    </li>
+    <li class="navigation__items__page">
+        <a href="${host}/careers/?number=3#search">3</a>
+    </li>
+    <li class="navigation__items__page">
+        <a href="${host}/careers/?number=4#search">4</a>
+    </li>
+    <li class="navigation__items__page navigation__items__page--active">
+        <a href="${host}/careers/?number=5#search">5</a>
+    </li>
+</ul>
+        `;
+            };
+            var original = getBase("http://www.example.local.colinr.com");
+            var expected = getBase("//" + proxyUrl);
+            var rewrite  = utils.rewriteLinks({hostname: "www.example.local.colinr.com", port: 80}, proxyUrl);
+            var actual   = original.replace(rewrite.match, rewrite.fn);
+            assert.equal(actual, expected);
+        });
     });
 });
