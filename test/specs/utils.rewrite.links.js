@@ -119,9 +119,27 @@ describe("Rewriting Domains", (function() {
       var expected = "<a href='//192.168.0.4:3002/sub/dir'></a>";
       assert.equal(actual, expected);
     }));
-    it("should use the regex to replace links that contain hashes", (function() {
+    it("should use the regex to replace links that contain hashes (1)", (function() {
+      var actual = testRegex("<a href='http://localhost:8000/sub/dir/?search=some#shane'></a>");
+      var expected = "<a href='//192.168.0.4:3002/sub/dir/?search=some#shane'></a>";
+      assert.equal(actual, expected);
+    }));
+    it("should use the regex to replace links that contain hashes (2)", (function() {
       var actual = testRegex("<a href='http://localhost:8000/sub/dir/#search'></a>");
       var expected = "<a href='//192.168.0.4:3002/sub/dir/#search'></a>";
+      assert.equal(actual, expected);
+    }));
+    it("should use the regex to replace links that contain hashes (2)", (function() {
+      var getBase = function(host) {
+        return ("\n<ul class=\"navigation__items\">\n    <li class=\"navigation__items__page\">\n        <a href=\"" + host + "/careers/?number=4\">« Previous</a>\n    </li>\n    <li class=\"navigation__items__page\">\n        <a href=\"" + host + "/careers/#search\">1</a>\n    </li>\n    <li class=\"navigation__items__page\">\n        <a href=\"" + host + "/careers/?number=2#search\">2</a>\n    </li>\n    <li class=\"navigation__items__page\">\n        <a href=\"" + host + "/careers/?number=3#search\">3</a>\n    </li>\n    <li class=\"navigation__items__page\">\n        <a href=\"" + host + "/careers/?number=4#search\">4</a>\n    </li>\n    <li class=\"navigation__items__page navigation__items__page--active\">\n        <a href=\"" + host + "/careers/?number=5#search\">5</a>\n    </li>\n</ul>\n        ");
+      };
+      var original = getBase("http://www.example.local.colinr.com");
+      var expected = getBase("//" + proxyUrl);
+      var rewrite = utils.rewriteLinks({
+        hostname: "www.example.local.colinr.com",
+        port: 80
+      }, proxyUrl);
+      var actual = original.replace(rewrite.match, rewrite.fn);
       assert.equal(actual, expected);
     }));
   }));
