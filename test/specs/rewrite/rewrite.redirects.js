@@ -4,7 +4,7 @@ var connect = require("connect");
 var http = require("http");
 var foxy = require("../../../");
 var getUrl = require("./helpers").getUrl;
-describe("rewrite paths", (function() {
+describe("Rewrite redirect headers", (function() {
   var app,
       server,
       serverUrl,
@@ -20,6 +20,11 @@ describe("rewrite paths", (function() {
       res.end();
       next();
     }));
+    app.use("/redirect-google", (function(req, res, next) {
+      res.writeHead(302, {"Location": "http://www.google.co.uk"});
+      res.end();
+      next();
+    }));
     proxy = foxy("http://127.0.0.1:" + port).listen();
     done();
   }));
@@ -32,6 +37,14 @@ describe("rewrite paths", (function() {
     http.get(("http://localhost:" + proxyPort + "/redirect"), (function(res) {
       assert.equal(res.statusCode, 302);
       assert.equal(res.headers["location"], ("http://localhost:" + proxyPort + "/nope"));
+      done();
+    }));
+  }));
+  it("Should NOT re-write redirect location if external", (function(done) {
+    var proxyPort = proxy.address().port;
+    http.get(("http://localhost:" + proxyPort + "/redirect-google"), (function(res) {
+      assert.equal(res.statusCode, 302);
+      assert.equal(res.headers["location"], "http://www.google.co.uk");
       done();
     }));
   }));
