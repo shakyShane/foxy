@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 var meow   = require("meow");
-var devip  = require("dev-ip").getIp();
+var devip  = require("dev-ip")();
 var logger = require("./lib/logger");
 var foxy   = require("./");
 var help   = require("fs").readFileSync(__dirname + "/help.txt", "utf8");
@@ -12,7 +12,8 @@ var cli = meow({
 if (cli.input.length) {
     var server = foxy(cli.input[0], cli.flags);
     server.listen(cli.flags.port);
-    var urls = ["http://localhost:" + server.address().port];
+    var port = server.address().port;
+    var urls = ["http://localhost:" + port];
     if (devip.length) {
         urls.push("http://" + devip[0] + ":" + server.address().port);
     }

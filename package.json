@@ -33,7 +33,7 @@
   "homepage": "https://github.com/shakyShane/foxy",
   "dependencies": {
     "cookie": "^0.1.2",
-    "dev-ip": "^0.1.7",
+    "dev-ip": "^1.0.1",
     "eazy-logger": "^2.0.0",
     "http-proxy": "^1.7.3",
     "immutable": "^3.3.0",
