@@ -38,7 +38,6 @@ function foxy(target, userConfig) {
      * Handle proxy errors
      */
     proxy.on("error",    config.get("errHandler"));
-    proxy.on("proxyRes", utils.handleRedirect(config));
     server.on("error",   config.get("errHandler"));
 
     /**
