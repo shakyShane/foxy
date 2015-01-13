@@ -2,7 +2,7 @@ var gulp    = require("gulp");
 var traceur = require("gulp-traceur");
 var util    = require("gulp-util");
 var combiner = require("stream-combiner2");
-var testSrc = "test/src/**/*";
+var testSrc = "test/src/**";
 
 gulp.task('es6', function () {
 

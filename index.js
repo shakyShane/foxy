@@ -7,6 +7,7 @@
 
 var httpProxy  = require("http-proxy");
 var http       = require("http");
+var Immutable  = require("immutable");
 
 var conf       = require("./lib/config");
 var foxyServer = require("./lib/server");
@@ -24,6 +25,10 @@ function foxy(target, userConfig) {
      */
     var config = conf(target, userConfig);
 
+    var userConfig = function () {
+        return config;
+    };
+
     /**
      * Create basic httpProxy server
      */
@@ -32,7 +37,7 @@ function foxy(target, userConfig) {
     /**
      * Create HTTP server & pass proxyServer for parsing
      */
-    var server = http.createServer(foxyServer(proxy, config));
+    var server = http.createServer(foxyServer(proxy, userConfig));
 
     /**
      * Handle proxy errors
@@ -48,6 +53,15 @@ function foxy(target, userConfig) {
     /**
      * return the proxy server ready for .listen();
      */
+
+    server.app = {
+        use: function (path, fn) {
+            if (!config.get("staticFiles").has(path)) {
+                config = config.setIn(["staticFiles", path], fn);
+            }
+        }
+    };
+
     return server;
 }
 
