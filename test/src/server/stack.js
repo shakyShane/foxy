@@ -6,6 +6,7 @@ var http      = require("http");
 var assert    = require("chai").assert;
 
 var output = `Some content`;
+var html = require("fs").readFileSync(__dirname + "/../../../test/fixtures/index1.html");
 
 describe("Accessing mw stack on the fly", () => {
 
@@ -33,7 +34,7 @@ describe("Accessing mw stack on the fly", () => {
 
         assert.equal(proxy.app.stack.length, 1);
 
-        proxy.app.stack.push({route: "*", handle: function () {}, id: "foxy-mw"});
+        proxy.app.stack.push({route: "", handle: function () {}, id: "foxy-mw"});
 
         assert.equal(proxy.app.stack.length, 2);
 
@@ -79,7 +80,7 @@ describe("Adding to mw stack on the fly", () => {
 
         var spy = sinon.spy();
 
-        proxy.app.stack.push({route: "*", handle: function (req, res, next) {
+        proxy.app.stack.push({route: "", handle: function (req, res, next) {
             spy(req.url);
             next();
         }, id: "foxy-mw"});
@@ -102,11 +103,20 @@ describe("Adding to front of mw stack on the fly", () => {
         var path = "/templates/page1.html";
 
         app    = connect();
-        app.use(path, (req, res) => res.end(output));
+        app.use(path, (req, res) => res.end(html));
 
         server = http.createServer(app).listen();
 
-        proxy = foxy(`http://localhost:${server.address().port}`).listen();
+        proxy = foxy(`http://localhost:${server.address().port}`, {
+            rules: [
+                {
+                    match: /Link here/g,
+                    fn: function (match) {
+                        return match + " - Please";
+                    }
+                }
+            ]
+        }).listen();
 
         var options = {
             hostname: 'localhost',
@@ -120,23 +130,29 @@ describe("Adding to front of mw stack on the fly", () => {
 
         var spy = sinon.spy();
 
-
-        proxy.app.stack.push({route: "*", handle: function (req, res, next) {
+        proxy.app.stack.push({route: "", handle: function (req, res, next) {
             spy(req.url);
             next();
-        }, id: "foxy-mw"});
+        }, id: "foxy-test-mw"});
 
-        proxy.app.stack.unshift({route: "*", handle: function (req, res, next) {
+        proxy.app.stack.unshift({route: "/kittie", handle: function (req, res, next) {
             res.end("SHANE");
         }});
 
         http.get(options, (res) => {
             res.on("data", chunk => {
+                assert.include(chunk.toString(), "Link here - Please");
+                sinon.assert.calledWith(spy, path);
+            });
+        });
+
+        options.path = "/kittie";
+
+        http.get(options, (res) => {
+            res.on("data", chunk => {
                 assert.include(chunk.toString(), "SHANE");
-                sinon.assert.notCalled(spy);
                 done();
             });
-            server.close();
         });
     });
 });

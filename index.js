@@ -41,7 +41,11 @@ function foxy(target, userConfig) {
 
             if (!fn) {
                 fn = path;
-                path = "*";
+                path = "";
+            }
+
+            if (path === "*") {
+                path = "";
             }
 
             app.stack.push({route: path, handle: fn, id: opts.id});
