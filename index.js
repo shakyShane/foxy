@@ -25,9 +25,52 @@ function foxy(target, userConfig) {
      */
     var config = conf(target, userConfig);
 
-    var userConfig = function () {
-        return config;
+    /**
+     * Setup the connect-like app.
+     * @type {{use: Function}}
+     */
+    var app = {
+
+        use: function (path, fn, opts) {
+
+            opts = opts || {};
+
+            if (!opts.id) {
+                opts.id = "foxy-mw-" + Math.random();
+            }
+
+            if (!fn) {
+                fn = path;
+                path = "*";
+            }
+
+            app.stack.push({route: path, handle: fn, id: opts.id});
+        }
     };
+
+    /**
+     * Start with empty stack
+     * @type {Array}
+     */
+    app.stack = [];
+
+    /**
+     * Allow dynamic access to stack
+     * @returns {{config: *, stack: Array}}
+     */
+    var userConfig = function () {
+        return {
+            config: config,
+            stack: app.stack
+        };
+    };
+
+    /**
+     * Add any middlewares given in config
+     */
+    config.get("middleware").forEach(function (item) {
+        app.stack.push(item);
+    });
 
     /**
      * Create basic httpProxy server
@@ -40,6 +83,11 @@ function foxy(target, userConfig) {
     var server = http.createServer(foxyServer(proxy, userConfig));
 
     /**
+     * Attach connect-like app to server for exporting
+     */
+    server.app = app;
+
+    /**
      * Handle proxy errors
      */
     proxy.on("error",    config.get("errHandler"));
@@ -49,28 +97,6 @@ function foxy(target, userConfig) {
      * Modify Proxy responses
      */
     proxy.on("proxyRes", utils.proxyRes(config));
-
-    /**
-     * return the proxy server ready for .listen();
-     */
-
-    server.app = {
-        use: function (path, fn, opts) {
-
-            opts = opts || {};
-
-            if (!opts.id) {
-                opts.id = "foxy-mw-" + Math.random();
-            }
-
-            if (!fn) {
-                fn = path;
-                path = false;
-            }
-
-            config = config.set("middleware", config.get("middleware").push({route: path, handle: fn, id: opts.id}));
-        }
-    };
 
     return server;
 }
