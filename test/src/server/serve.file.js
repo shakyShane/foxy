@@ -85,3 +85,44 @@ describe("Running middleware and calling next", () => {
 });
 
 
+describe("Running middleware and calling next", () => {
+
+    it("should allow the serving of static files AFTER init", done => {
+        var app, server, proxy;
+        var path = "/templates/page1.html";
+        app    = connect();
+        app.use(path, (req, res) => res.end(output));
+        server = http.createServer(app).listen();
+        proxy = foxy(`http://localhost:${server.address().port}`).listen();
+        var spy = sinon.spy();
+
+        var options = {
+            hostname: 'localhost',
+            port: proxy.address().port,
+            path: path,
+            method: 'GET',
+            headers: {
+                "accept": "text/html"
+            }
+        };
+
+        assert.isFunction(proxy.app.use);
+
+        proxy.app.use(function (req, res, next) {
+            spy(req.url);
+            next();
+        });
+
+        http.get(options, (res) => {
+            res.on("data", chunk => {
+                sinon.assert.calledWith(spy, path);
+                assert.include(chunk.toString(), "Some content");
+                done();
+            });
+            server.close();
+        });
+    });
+});
+
+
+

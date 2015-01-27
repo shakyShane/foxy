@@ -55,12 +55,20 @@ function foxy(target, userConfig) {
      */
 
     server.app = {
-        use: function (path, fn) {
+        use: function (path, fn, opts) {
+
+            opts = opts || {};
+
+            if (!opts.id) {
+                opts.id = "foxy-mw-" + Math.random();
+            }
+
             if (!fn) {
                 fn = path;
                 path = false;
             }
-            config = config.set("middleware", config.get("middleware").push({path: path, fn: fn}));
+
+            config = config.set("middleware", config.get("middleware").push({route: path, handle: fn, id: opts.id}));
         }
     };
 
