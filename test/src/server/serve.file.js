@@ -68,7 +68,7 @@ describe("Running middleware and calling next", () => {
 
         assert.isFunction(proxy.app.use);
 
-        proxy.app.use(path, function (req, res, next) {
+        proxy.app.use(function (req, res, next) {
             spy(req.url);
             next();
         });

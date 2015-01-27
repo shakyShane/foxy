@@ -56,6 +56,10 @@ function foxy(target, userConfig) {
 
     server.app = {
         use: function (path, fn) {
+            if (!fn) {
+                fn = path;
+                path = false;
+            }
             config = config.set("middleware", config.get("middleware").push({path: path, fn: fn}));
         }
     };
