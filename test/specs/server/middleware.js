@@ -2,6 +2,7 @@
 var foxy = require("../../../index");
 var request = require("supertest");
 var connect = require("connect");
+var sinon = require("sinon");
 var http = require("http");
 var assert = require("chai").assert;
 var output = "\n<!doctype html>\n<html lang=\"en-US\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title></title>\n</head>\n<body>\n    Hi there\n</body>\n</html>\n";
@@ -19,10 +20,10 @@ describe("Running middlewares + html mods", (function() {
           return "BrowserSync";
         }
       }],
-      middleware: (function(req, res, next) {
+      middleware: [(function(req, res, next) {
         assert.equal(req.url, path);
         next();
-      })
+      })]
     };
     app = connect();
     app.use(path, (function(req, res) {
@@ -51,6 +52,7 @@ describe("Running middlewares + html mods", (function() {
         server,
         proxy;
     var path = "/templates/page1.html";
+    var spy = sinon.spy();
     config = {
       rules: [{
         match: /Hi there/g,
@@ -59,8 +61,8 @@ describe("Running middlewares + html mods", (function() {
         }
       }],
       middleware: (function(req, res, next) {
-        res.end("FOXY IS KING");
-        next(true);
+        spy("called from mw");
+        next();
       })
     };
     app = connect();
@@ -78,7 +80,8 @@ describe("Running middlewares + html mods", (function() {
     };
     http.get(options, (function(res) {
       res.on("data", (function(chunk) {
-        assert.include(chunk.toString(), "FOXY IS KING");
+        assert.include(chunk.toString(), "BrowserSync");
+        sinon.assert.calledWith(spy, "called from mw");
         done();
       }));
       server.close();

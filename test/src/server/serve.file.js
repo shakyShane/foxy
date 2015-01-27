@@ -1,10 +1,11 @@
 var foxy      = require("../../../index");
 var request   = require("supertest");
 var connect   = require("connect");
+var sinon     = require("sinon");
 var http      = require("http");
 var assert    = require("chai").assert;
 
-var output = `Some shitty content`;
+var output = `Some content`;
 
 describe("Running Serving static files", () => {
 
@@ -15,6 +16,7 @@ describe("Running Serving static files", () => {
         app.use(path, (req, res) => res.end(output));
         server = http.createServer(app).listen();
         proxy = foxy(`http://localhost:${server.address().port}`).listen();
+
         var options = {
             hostname: 'localhost',
             port: proxy.address().port,
@@ -42,4 +44,44 @@ describe("Running Serving static files", () => {
         });
     });
 });
+
+describe("Running middleware and calling next", () => {
+
+    it("should allow the serving of static files AFTER init", done => {
+        var app, server, proxy;
+        var path = "/templates/page1.html";
+        app    = connect();
+        app.use(path, (req, res) => res.end(output));
+        server = http.createServer(app).listen();
+        proxy = foxy(`http://localhost:${server.address().port}`).listen();
+        var spy = sinon.spy();
+
+        var options = {
+            hostname: 'localhost',
+            port: proxy.address().port,
+            path: path,
+            method: 'GET',
+            headers: {
+                "accept": "text/html"
+            }
+        };
+
+        assert.isFunction(proxy.app.use);
+
+        proxy.app.use(path, function (req, res, next) {
+            spy(req.url);
+            next();
+        });
+
+        http.get(options, (res) => {
+            res.on("data", chunk => {
+                sinon.assert.calledWith(spy, path);
+                assert.include(chunk.toString(), "Some content");
+                done();
+            });
+            server.close();
+        });
+    });
+});
+
 

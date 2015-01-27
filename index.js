@@ -56,15 +56,13 @@ function foxy(target, userConfig) {
 
     server.app = {
         use: function (path, fn) {
-            if (!config.get("staticFiles").has(path)) {
-                config = config.setIn(["staticFiles", path], fn);
-            }
+            config = config.set("middleware", config.get("middleware").push({path: path, fn: fn}));
         }
     };
 
     return server;
 }
 
-module.exports = foxy;
+module.exports      = foxy;
 module.exports.init = foxy; // backwards compatibility
 

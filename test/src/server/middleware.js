@@ -1,6 +1,7 @@
 var foxy      = require("../../../index");
 var request   = require("supertest");
 var connect   = require("connect");
+var sinon     = require("sinon");
 var http      = require("http");
 var assert    = require("chai").assert;
 
@@ -29,10 +30,10 @@ describe("Running middlewares + html mods", () => {
                     return "BrowserSync";
                 }
             }],
-            middleware: (req, res, next) => {
+            middleware: [(req, res, next) => {
                 assert.equal(req.url, path);
                 next();
-            }
+            }]
         };
         app    = connect();
         app.use(path, (req, res) => res.end(output));
@@ -58,6 +59,7 @@ describe("Running middlewares + html mods", () => {
     it("should run middleware and then skip any others", done => {
         var config, app, server, proxy;
         var path = "/templates/page1.html";
+        var spy = sinon.spy();
         config = {
             rules: [{
                 match: /Hi there/g,
@@ -66,8 +68,8 @@ describe("Running middlewares + html mods", () => {
                 }
             }],
             middleware: (req, res, next) => {
-                res.end("FOXY IS KING");
-                next(true);
+                spy("called from mw");
+                next();
             }
         };
         app    = connect();
@@ -85,7 +87,8 @@ describe("Running middlewares + html mods", () => {
         };
         http.get(options, (res) => {
             res.on("data", chunk => {
-                assert.include(chunk.toString(), "FOXY IS KING");
+                assert.include(chunk.toString(), "BrowserSync");
+                sinon.assert.calledWith(spy, "called from mw");
                 done();
             });
             server.close();
