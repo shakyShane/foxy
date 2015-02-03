@@ -52,6 +52,18 @@ var config = {
 var proxy = foxy("http://localhost:3000", config).listen(8000);
 ```
 
+## white/black lists
+
+You can force some paths to always be processed by the middlewares.
+
+```js
+var proxy = foxy("http://wordpress.dev", {
+    whitelist: ["/wp-admin/admin-ajax.php"], // whitelist checked first
+    blacklist: ["/wp-admin/**"],
+}).listen(8000);
+```
+
+
 #TODO
 
 - [ ] https
