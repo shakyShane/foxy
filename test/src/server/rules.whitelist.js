@@ -17,7 +17,7 @@ var output = `
 </html>
 `;
 
-describe("Ignoring certain paths", () => {
+describe("Whitelisting certain paths", () => {
     var config, app, server, proxy, path;
     before(() => {
         config = {
@@ -25,7 +25,7 @@ describe("Ignoring certain paths", () => {
                 match: /Hi there/,
                 fn: match => "Browser Sync " + match
             }],
-            ignorePaths: "templates/*.html"
+            whitelist: ["/templates/*.html"]
         };
 
         path = "/templates/page1.html";
@@ -38,13 +38,12 @@ describe("Ignoring certain paths", () => {
 
     after(() => server.close());
 
-    it("should replace some text", function (done) {
+    it("should replace links even when no accept headers", function (done) {
         request(proxy)
             .get(path)
-            .set("accept", "text/html")
             .expect(200)
             .end((err, res) => {
-                assert.notInclude(res.text, "Browser Sync");
+                assert.include(res.text, "Browser Sync");
                 done();
             });
     });

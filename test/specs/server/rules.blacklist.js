@@ -19,7 +19,7 @@ describe("Ignoring certain paths", (function() {
           return "Browser Sync " + match;
         })
       }],
-      ignorePaths: "templates/*.html"
+      blacklist: ["/templates/*.html"]
     };
     path = "/templates/page1.html";
     app = connect();
