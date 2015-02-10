@@ -15,11 +15,12 @@ describe("Running Serving static files", () => {
         app    = connect();
         app.use(path, (req, res) => res.end(output));
         server = http.createServer(app).listen();
-        proxy = foxy(`http://localhost:${server.address().port}`).listen();
+        proxy = foxy(`http://localhost:${server.address().port}`);
+        var foxyserver = http.createServer(proxy).listen();
 
         var options = {
             hostname: 'localhost',
-            port: proxy.address().port,
+            port: foxyserver.address().port,
             path: "/shane",
             method: 'GET',
             headers: {
@@ -27,9 +28,9 @@ describe("Running Serving static files", () => {
             }
         };
 
-        assert.isFunction(proxy.app.use);
+        assert.isFunction(proxy.use);
 
-        proxy.app.use("/shane", function (req, res) {
+        proxy.use("/shane", function (req, res) {
             res.setHeader("Content-Type", "text/css");
             res.end("Content from .use");
         });
@@ -54,12 +55,14 @@ describe("Running middleware and calling next", () => {
         app    = connect();
         app.use(path, (req, res) => res.end(output));
         server = http.createServer(app).listen();
-        proxy = foxy(`http://localhost:${server.address().port}`).listen();
+        proxy = foxy(`http://localhost:${server.address().port}`);
+        var foxyserver = http.createServer(proxy).listen();
+
         var spy = sinon.spy();
 
         var options = {
             hostname: 'localhost',
-            port: proxy.address().port,
+            port: foxyserver.address().port,
             path: path,
             method: 'GET',
             headers: {
@@ -67,9 +70,9 @@ describe("Running middleware and calling next", () => {
             }
         };
 
-        assert.isFunction(proxy.app.use);
+        assert.isFunction(proxy.use);
 
-        proxy.app.use("*", function (req, res, next) {
+        proxy.use("*", function (req, res, next) {
             spy(req.url);
             next();
         });
@@ -94,12 +97,13 @@ describe("Running middleware and calling next", () => {
         app    = connect();
         app.use(path, (req, res) => res.end(output));
         server = http.createServer(app).listen();
-        proxy = foxy(`http://localhost:${server.address().port}`).listen();
+        proxy = foxy(`http://localhost:${server.address().port}`);
+        var foxyserver = http.createServer(proxy).listen();
         var spy = sinon.spy();
 
         var options = {
             hostname: 'localhost',
-            port: proxy.address().port,
+            port: foxyserver.address().port,
             path: path,
             method: 'GET',
             headers: {
@@ -107,9 +111,9 @@ describe("Running middleware and calling next", () => {
             }
         };
 
-        assert.isFunction(proxy.app.use);
+        assert.isFunction(proxy.use);
 
-        proxy.app.use(function (req, res, next) {
+        proxy.use(function (req, res, next) {
             spy(req.url);
             next();
         });

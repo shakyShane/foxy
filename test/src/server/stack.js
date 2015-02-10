@@ -20,11 +20,13 @@ describe("Accessing mw stack on the fly", () => {
 
         server = http.createServer(app).listen();
 
-        proxy = foxy(`http://localhost:${server.address().port}`).listen();
+        proxy = foxy(`http://localhost:${server.address().port}`);
+        var foxyserver = http.createServer(proxy).listen();
+
 
         var options = {
             hostname: 'localhost',
-            port: proxy.address().port,
+            port: foxyserver.address().port,
             path: path,
             method: 'GET',
             headers: {
@@ -32,17 +34,17 @@ describe("Accessing mw stack on the fly", () => {
             }
         };
 
-        assert.equal(proxy.app.stack.length, 1);
+        assert.equal(proxy.stack.length, 2);
 
-        proxy.app.stack.push({route: "", handle: function () {}, id: "foxy-mw"});
+        proxy.stack.push({route: "", handle: function () {}, id: "foxy-mw"});
 
-        assert.equal(proxy.app.stack.length, 2);
+        assert.equal(proxy.stack.length, 3);
 
-        proxy.app.stack = proxy.app.stack.filter(function (item) {
+        proxy.stack = proxy.stack.filter(function (item) {
             return item.id !== "foxy-mw";
         });
 
-        assert.equal(proxy.app.stack.length, 1);
+        assert.equal(proxy.stack.length, 2);
 
         http.get(options, (res) => {
             res.on("data", chunk => {
@@ -56,7 +58,7 @@ describe("Accessing mw stack on the fly", () => {
 
 describe("Adding to mw stack on the fly", () => {
 
-    it("should return stack", done => {
+    it.only("should return stack", done => {
 
         var app, server, proxy;
         var path = "/templates/page1.html";
@@ -66,11 +68,13 @@ describe("Adding to mw stack on the fly", () => {
 
         server = http.createServer(app).listen();
 
-        proxy = foxy(`http://localhost:${server.address().port}`).listen();
+        proxy = foxy(`http://localhost:${server.address().port}`);
+        var foxyserver = http.createServer(proxy).listen();
+
 
         var options = {
             hostname: 'localhost',
-            port: proxy.address().port,
+            port: foxyserver.address().port,
             path: path,
             method: 'GET',
             headers: {

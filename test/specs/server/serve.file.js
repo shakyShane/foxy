@@ -17,16 +17,17 @@ describe("Running Serving static files", (function() {
       return res.end(output);
     }));
     server = http.createServer(app).listen();
-    proxy = foxy(("http://localhost:" + server.address().port)).listen();
+    proxy = foxy(("http://localhost:" + server.address().port));
+    var foxyserver = http.createServer(proxy).listen();
     var options = {
       hostname: 'localhost',
-      port: proxy.address().port,
+      port: foxyserver.address().port,
       path: "/shane",
       method: 'GET',
       headers: {"accept": "text/html"}
     };
-    assert.isFunction(proxy.app.use);
-    proxy.app.use("/shane", function(req, res) {
+    assert.isFunction(proxy.use);
+    proxy.use("/shane", function(req, res) {
       res.setHeader("Content-Type", "text/css");
       res.end("Content from .use");
     });
@@ -51,17 +52,18 @@ describe("Running middleware and calling next", (function() {
       return res.end(output);
     }));
     server = http.createServer(app).listen();
-    proxy = foxy(("http://localhost:" + server.address().port)).listen();
+    proxy = foxy(("http://localhost:" + server.address().port));
+    var foxyserver = http.createServer(proxy).listen();
     var spy = sinon.spy();
     var options = {
       hostname: 'localhost',
-      port: proxy.address().port,
+      port: foxyserver.address().port,
       path: path,
       method: 'GET',
       headers: {"accept": "text/html"}
     };
-    assert.isFunction(proxy.app.use);
-    proxy.app.use("*", function(req, res, next) {
+    assert.isFunction(proxy.use);
+    proxy.use("*", function(req, res, next) {
       spy(req.url);
       next();
     });
@@ -86,17 +88,18 @@ describe("Running middleware and calling next", (function() {
       return res.end(output);
     }));
     server = http.createServer(app).listen();
-    proxy = foxy(("http://localhost:" + server.address().port)).listen();
+    proxy = foxy(("http://localhost:" + server.address().port));
+    var foxyserver = http.createServer(proxy).listen();
     var spy = sinon.spy();
     var options = {
       hostname: 'localhost',
-      port: proxy.address().port,
+      port: foxyserver.address().port,
       path: path,
       method: 'GET',
       headers: {"accept": "text/html"}
     };
-    assert.isFunction(proxy.app.use);
-    proxy.app.use(function(req, res, next) {
+    assert.isFunction(proxy.use);
+    proxy.use(function(req, res, next) {
       spy(req.url);
       next();
     });

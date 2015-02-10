@@ -18,25 +18,26 @@ describe("Accessing mw stack on the fly", (function() {
       return res.end(output);
     }));
     server = http.createServer(app).listen();
-    proxy = foxy(("http://localhost:" + server.address().port)).listen();
+    proxy = foxy(("http://localhost:" + server.address().port));
+    var foxyserver = http.createServer(proxy).listen();
     var options = {
       hostname: 'localhost',
-      port: proxy.address().port,
+      port: foxyserver.address().port,
       path: path,
       method: 'GET',
       headers: {"accept": "text/html"}
     };
-    assert.equal(proxy.app.stack.length, 1);
-    proxy.app.stack.push({
+    assert.equal(proxy.stack.length, 2);
+    proxy.stack.push({
       route: "",
       handle: function() {},
       id: "foxy-mw"
     });
-    assert.equal(proxy.app.stack.length, 2);
-    proxy.app.stack = proxy.app.stack.filter(function(item) {
+    assert.equal(proxy.stack.length, 3);
+    proxy.stack = proxy.stack.filter(function(item) {
       return item.id !== "foxy-mw";
     });
-    assert.equal(proxy.app.stack.length, 1);
+    assert.equal(proxy.stack.length, 2);
     http.get(options, (function(res) {
       res.on("data", (function(chunk) {
         assert.include(chunk.toString(), "Some content");
@@ -47,7 +48,7 @@ describe("Accessing mw stack on the fly", (function() {
   }));
 }));
 describe("Adding to mw stack on the fly", (function() {
-  it("should return stack", (function(done) {
+  it.only("should return stack", (function(done) {
     var app,
         server,
         proxy;
@@ -57,10 +58,11 @@ describe("Adding to mw stack on the fly", (function() {
       return res.end(output);
     }));
     server = http.createServer(app).listen();
-    proxy = foxy(("http://localhost:" + server.address().port)).listen();
+    proxy = foxy(("http://localhost:" + server.address().port));
+    var foxyserver = http.createServer(proxy).listen();
     var options = {
       hostname: 'localhost',
-      port: proxy.address().port,
+      port: foxyserver.address().port,
       path: path,
       method: 'GET',
       headers: {"accept": "text/html"}
