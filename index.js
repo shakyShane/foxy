@@ -4,9 +4,6 @@
  * https://github.com/shakyShane/foxy
  *
  */
-var http       = require("http");
-var utils      = require("./lib/utils");
-var app        = require("connect");
 
 /**
  * @param {String} target - a url such as http://www.bbc.co.uk or http://localhost:8181
@@ -20,6 +17,10 @@ function foxy(target, userConfig) {
      * @type {Immutable.Map}
      */
     var config = require("./lib/config")(target, userConfig);
+
+    /**
+     * Create a connect app
+     */
     var app    = require("./lib/server")(config);
 
     /**
