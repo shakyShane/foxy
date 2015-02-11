@@ -51,14 +51,14 @@ describe("Accessing mw stack on the fly", () => {
                 assert.include(chunk.toString(), "Some content");
                 done();
             });
-            server.close();
+            foxyserver.close();
         });
     });
 });
 
 describe("Adding to mw stack on the fly", () => {
 
-    it.only("should return stack", done => {
+    it("should return stack", done => {
 
         var app, server, proxy;
         var path = "/templates/page1.html";
@@ -84,24 +84,24 @@ describe("Adding to mw stack on the fly", () => {
 
         var spy = sinon.spy();
 
-        proxy.app.stack.push({route: "", handle: function (req, res, next) {
+        proxy.use(function shaneRoute(req, res, next) {
             spy(req.url);
             next();
-        }, id: "foxy-mw"});
+        }, {id: "foxy-mw"});
 
         http.get(options, (res) => {
             res.on("data", chunk => {
                 sinon.assert.calledWith(spy, path);
+                foxyserver.close();
                 done();
             });
-            server.close();
         });
     });
 });
 
 describe("Adding to front of mw stack on the fly", () => {
 
-    it("should return stack", done => {
+    it("should call middleware at correct time", done => {
 
         var app, server, proxy;
         var path = "/templates/page1.html";
@@ -120,11 +120,13 @@ describe("Adding to front of mw stack on the fly", () => {
                     }
                 }
             ]
-        }).listen();
+        });
+
+        var foxyserver = http.createServer(proxy).listen();
 
         var options = {
             hostname: 'localhost',
-            port: proxy.address().port,
+            port: foxyserver.address().port,
             path: path,
             method: 'GET',
             headers: {
@@ -134,12 +136,12 @@ describe("Adding to front of mw stack on the fly", () => {
 
         var spy = sinon.spy();
 
-        proxy.app.stack.push({route: "", handle: function (req, res, next) {
+        proxy.use(function (req, res, next) {
             spy(req.url);
             next();
-        }, id: "foxy-test-mw"});
+        }, {id: "foxy-test-mw"});
 
-        proxy.app.stack.unshift({route: "/kittie", handle: function (req, res, next) {
+        proxy.stack.unshift({route: "/kittie", handle: function (req, res, next) {
             res.end("SHANE");
         }});
 
@@ -155,6 +157,7 @@ describe("Adding to front of mw stack on the fly", () => {
         http.get(options, (res) => {
             res.on("data", chunk => {
                 assert.include(chunk.toString(), "SHANE");
+                foxyserver.close();
                 done();
             });
         });
