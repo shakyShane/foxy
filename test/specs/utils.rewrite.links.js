@@ -152,7 +152,7 @@ describe("Rewriting Domains", (function() {
       var actual = input.replace(rewrite.match, rewrite.fn);
       assert.equal(actual, expected);
     }));
-    it.only("should not replace when host + subdomain ", (function() {
+    it("should not replace when host + subdomain ", (function() {
       var input = "<a href=\"http://assets.cdn.example.com:1234/foo\">Link 1</a>";
       var rewrite = utils.rewriteLinks({
         hostname: "example.com",
