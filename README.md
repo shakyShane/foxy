@@ -1,5 +1,6 @@
 ##Foxy 
-[![Build Status](https://travis-ci.org/shakyShane/foxy.svg?branch=master)](https://travis-ci.org/shakyShane/foxy)
+[![Travis branch](https://img.shields.io/travis/shakyShane/foxy/master.svg?style=flat-square&label=linux)](https://travis-ci.org/shakyShane/foxy)
+[![AppVeyor branch](https://img.shields.io/appveyor/ci/shakyshane/foxy/master.svg?style=flat-square&label=windows)]()
 
 Proxy with response moddin'
 
