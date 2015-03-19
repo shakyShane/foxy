@@ -1,6 +1,5 @@
 "use strict";
-var foxy = require("../../../index");
-var request = require("supertest");
+var foxy = require("../../../");
 var connect = require("connect");
 var sinon = require("sinon");
 var http = require("http");
@@ -21,11 +20,11 @@ describe("Accessing mw stack on the fly", (function() {
     proxy = foxy(("http://localhost:" + server.address().port));
     var foxyserver = http.createServer(proxy).listen();
     var options = {
-      hostname: 'localhost',
+      hostname: "localhost",
       port: foxyserver.address().port,
       path: path,
-      method: 'GET',
-      headers: {"accept": "text/html"}
+      method: "GET",
+      headers: {accept: "text/html"}
     };
     assert.equal(proxy.stack.length, 2);
     proxy.stack.push({
@@ -61,10 +60,10 @@ describe("Adding to mw stack on the fly", (function() {
     proxy = foxy(("http://localhost:" + server.address().port));
     var foxyserver = http.createServer(proxy).listen();
     var options = {
-      hostname: 'localhost',
+      hostname: "localhost",
       port: foxyserver.address().port,
       path: path,
-      method: 'GET',
+      method: "GET",
       headers: {"accept": "text/html"}
     };
     var spy = sinon.spy();
@@ -73,7 +72,7 @@ describe("Adding to mw stack on the fly", (function() {
       next();
     }, {id: "foxy-mw"});
     http.get(options, (function(res) {
-      res.on("data", (function(chunk) {
+      res.on("data", (function() {
         sinon.assert.calledWith(spy, path);
         foxyserver.close();
         done();
@@ -100,10 +99,10 @@ describe("Adding to front of mw stack on the fly", (function() {
       }]});
     var foxyserver = http.createServer(proxy).listen();
     var options = {
-      hostname: 'localhost',
+      hostname: "localhost",
       port: foxyserver.address().port,
       path: path,
-      method: 'GET',
+      method: "GET",
       headers: {"accept": "text/html"}
     };
     var spy = sinon.spy();
@@ -115,6 +114,7 @@ describe("Adding to front of mw stack on the fly", (function() {
       route: "/kittie",
       handle: function(req, res, next) {
         res.end("SHANE");
+        next();
       }
     });
     http.get(options, (function(res) {

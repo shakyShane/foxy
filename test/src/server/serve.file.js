@@ -1,5 +1,4 @@
 var foxy      = require("../../../index");
-var request   = require("supertest");
 var connect   = require("connect");
 var sinon     = require("sinon");
 var http      = require("http");
@@ -19,12 +18,12 @@ describe("Running Serving static files", () => {
         var foxyserver = http.createServer(proxy).listen();
 
         var options = {
-            hostname: 'localhost',
+            hostname: "localhost",
             port: foxyserver.address().port,
             path: "/shane",
-            method: 'GET',
+            method: "GET",
             headers: {
-                "accept": "text/html"
+                accept: "text/html"
             }
         };
 
@@ -61,10 +60,10 @@ describe("Running middleware and calling next", () => {
         var spy = sinon.spy();
 
         var options = {
-            hostname: 'localhost',
+            hostname: "localhost",
             port: foxyserver.address().port,
             path: path,
-            method: 'GET',
+            method: "GET",
             headers: {
                 "accept": "text/html"
             }
@@ -102,10 +101,10 @@ describe("Running middleware and calling next", () => {
         var spy = sinon.spy();
 
         var options = {
-            hostname: 'localhost',
+            hostname: "localhost",
             port: foxyserver.address().port,
             path: path,
-            method: 'GET',
+            method: "GET",
             headers: {
                 "accept": "text/html"
             }

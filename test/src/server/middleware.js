@@ -1,5 +1,4 @@
 var foxy      = require("../../../index");
-var request   = require("supertest");
 var connect   = require("connect");
 var sinon     = require("sinon");
 var http      = require("http");
@@ -40,12 +39,12 @@ describe("Running middlewares + html mods", () => {
         server = http.createServer(app).listen();
         proxy = foxy(`http://localhost:${server.address().port}`, config).listen();
         var options = {
-            hostname: 'localhost',
+            hostname: "localhost",
             port: proxy.address().port,
             path: path,
-            method: 'GET',
+            method: "GET",
             headers: {
-                "accept": "text/html"
+                accept: "text/html"
             }
         };
         http.get(options, (res) => {
@@ -77,12 +76,12 @@ describe("Running middlewares + html mods", () => {
         server = http.createServer(app).listen();
         proxy = foxy(`http://localhost:${server.address().port}`, config).listen();
         var options = {
-            hostname: 'localhost',
+            hostname: "localhost",
             port: proxy.address().port,
             path: path,
-            method: 'GET',
+            method: "GET",
             headers: {
-                "accept": "text/html"
+                accept: "text/html"
             }
         };
         http.get(options, (res) => {

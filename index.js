@@ -11,6 +11,7 @@
  * @returns {http.Server}
  */
 function foxy(target, userConfig) {
+    "use strict";
 
     /**
      * Merge user config with defaults
@@ -33,4 +34,3 @@ function foxy(target, userConfig) {
 
 module.exports      = foxy;
 module.exports.init = foxy; // backwards compatibility
-

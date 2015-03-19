@@ -1,6 +1,5 @@
 "use strict";
 var utils = require("../../lib/utils");
-var url = require("url");
 var foxy = require("../../");
 var connect = require("connect");
 var http = require("http");
@@ -40,10 +39,10 @@ describe("Adding accept headers for old IE", (function() {
         })
       }}).listen();
     var options = {
-      hostname: 'localhost',
+      hostname: "localhost",
       port: proxy.address().port,
       path: path,
-      method: 'GET',
+      method: "GET",
       headers: {"user-agent": ua}
     };
     http.get(options, (function(res) {

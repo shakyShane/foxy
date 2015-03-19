@@ -1,4 +1,5 @@
-var http = require("http");
+"use strict";
+
 var app  = require("./")("http://www.bbc.co.uk");
 
 var server = app.listen(8001);

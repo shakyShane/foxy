@@ -1,6 +1,5 @@
 "use strict";
 var foxy = require("../../../index");
-var request = require("supertest");
 var connect = require("connect");
 var sinon = require("sinon");
 var http = require("http");
@@ -32,11 +31,11 @@ describe("Running middlewares + html mods", (function() {
     server = http.createServer(app).listen();
     proxy = foxy(("http://localhost:" + server.address().port), config).listen();
     var options = {
-      hostname: 'localhost',
+      hostname: "localhost",
       port: proxy.address().port,
       path: path,
-      method: 'GET',
-      headers: {"accept": "text/html"}
+      method: "GET",
+      headers: {accept: "text/html"}
     };
     http.get(options, (function(res) {
       res.on("data", (function(chunk) {
@@ -72,11 +71,11 @@ describe("Running middlewares + html mods", (function() {
     server = http.createServer(app).listen();
     proxy = foxy(("http://localhost:" + server.address().port), config).listen();
     var options = {
-      hostname: 'localhost',
+      hostname: "localhost",
       port: proxy.address().port,
       path: path,
-      method: 'GET',
-      headers: {"accept": "text/html"}
+      method: "GET",
+      headers: {accept: "text/html"}
     };
     http.get(options, (function(res) {
       res.on("data", (function(chunk) {

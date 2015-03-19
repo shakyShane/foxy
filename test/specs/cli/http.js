@@ -1,11 +1,9 @@
 "use strict";
+var assert = require("chai").assert;
 var cli = require("../../../cli");
-var request = require("supertest");
 var connect = require("connect");
 var http = require("http");
-var assert = require("chai").assert;
 var output = "Some content";
-var html = require("fs").readFileSync(__dirname + "/../../../test/fixtures/index1.html");
 describe("Running from command line", (function() {
   it("With no port", (function(done) {
     var app,
@@ -22,11 +20,11 @@ describe("Running from command line", (function() {
       flags: {}
     });
     var options = {
-      hostname: 'localhost',
+      hostname: "localhost",
       port: out.server.address().port,
       path: path,
-      method: 'GET',
-      headers: {"accept": "text/html"}
+      method: "GET",
+      headers: {accept: "text/html"}
     };
     http.get(options, (function(res) {
       res.on("data", (function(chunk) {
@@ -51,11 +49,11 @@ describe("Running from command line", (function() {
       flags: {port: 3001}
     });
     var options = {
-      hostname: 'localhost',
+      hostname: "localhost",
       port: 3001,
       path: path,
-      method: 'GET',
-      headers: {"accept": "text/html"}
+      method: "GET",
+      headers: {accept: "text/html"}
     };
     http.get(options, (function(res) {
       res.on("data", (function(chunk) {

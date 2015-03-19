@@ -1,22 +1,24 @@
+"use strict";
+
 var gulp    = require("gulp");
 var traceur = require("gulp-traceur");
-var util    = require("gulp-util");
+var beeper    = require("beeper");
 var combiner = require("stream-combiner2");
 var testSrc = "test/src/**";
 
-gulp.task('es6', function () {
+gulp.task("es6", function () {
 
     var combined = combiner.obj([
         gulp.src(testSrc),
         traceur(),
-        gulp.dest('test/specs')
+        gulp.dest("test/specs")
     ]);
 
     // any errors in the above streams will get caught
     // by this listener, instead of being thrown:
-    combined.on('error', function (err) {
-        util.beep();
-        console.log(err)
+    combined.on("error", function (err) {
+        beeper();
+        console.log(err);
     });
 
     return combined;

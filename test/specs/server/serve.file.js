@@ -1,6 +1,5 @@
 "use strict";
 var foxy = require("../../../index");
-var request = require("supertest");
 var connect = require("connect");
 var sinon = require("sinon");
 var http = require("http");
@@ -20,11 +19,11 @@ describe("Running Serving static files", (function() {
     proxy = foxy(("http://localhost:" + server.address().port));
     var foxyserver = http.createServer(proxy).listen();
     var options = {
-      hostname: 'localhost',
+      hostname: "localhost",
       port: foxyserver.address().port,
       path: "/shane",
-      method: 'GET',
-      headers: {"accept": "text/html"}
+      method: "GET",
+      headers: {accept: "text/html"}
     };
     assert.isFunction(proxy.use);
     proxy.use("/shane", function(req, res) {
@@ -56,10 +55,10 @@ describe("Running middleware and calling next", (function() {
     var foxyserver = http.createServer(proxy).listen();
     var spy = sinon.spy();
     var options = {
-      hostname: 'localhost',
+      hostname: "localhost",
       port: foxyserver.address().port,
       path: path,
-      method: 'GET',
+      method: "GET",
       headers: {"accept": "text/html"}
     };
     assert.isFunction(proxy.use);
@@ -92,10 +91,10 @@ describe("Running middleware and calling next", (function() {
     var foxyserver = http.createServer(proxy).listen();
     var spy = sinon.spy();
     var options = {
-      hostname: 'localhost',
+      hostname: "localhost",
       port: foxyserver.address().port,
       path: path,
-      method: 'GET',
+      method: "GET",
       headers: {"accept": "text/html"}
     };
     assert.isFunction(proxy.use);
