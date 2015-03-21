@@ -4,14 +4,10 @@
   "description": "Proxy with response modding",
   "main": "index.js",
   "scripts": {
-    "lint": "jshint lib/*",
+    "lint": "jshint *.js lib/*.js test/src/*.js test/src/*/*.js",
     "unit": "mocha --recursive test/specs",
-    "cover": "npm run lint && istanbul cover _mocha --report lcovonly -- -R spec --timeout 10000 --recursive ./test/specs && istanbul-coveralls",
-    "test": "npm run lint && npm run unit"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/shakyShane/foxy"
+    "cover": "npm run lint && istanbul cover _mocha --report lcovonly -- --timeout 10000 --recursive test/specs && istanbul-coveralls",
+    "test": "npm run lint && gulp es6 && npm run unit"
   },
   "files": [
     "examples",
