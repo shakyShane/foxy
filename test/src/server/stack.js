@@ -1,5 +1,4 @@
-var foxy      = require("../../../index");
-var request   = require("supertest");
+var foxy      = require("../../../");
 var connect   = require("connect");
 var sinon     = require("sinon");
 var http      = require("http");
@@ -25,12 +24,12 @@ describe("Accessing mw stack on the fly", () => {
 
 
         var options = {
-            hostname: 'localhost',
+            hostname: "localhost",
             port: foxyserver.address().port,
             path: path,
-            method: 'GET',
+            method: "GET",
             headers: {
-                "accept": "text/html"
+                accept: "text/html"
             }
         };
 
@@ -73,10 +72,10 @@ describe("Adding to mw stack on the fly", () => {
 
 
         var options = {
-            hostname: 'localhost',
+            hostname: "localhost",
             port: foxyserver.address().port,
             path: path,
-            method: 'GET',
+            method: "GET",
             headers: {
                 "accept": "text/html"
             }
@@ -90,7 +89,7 @@ describe("Adding to mw stack on the fly", () => {
         }, {id: "foxy-mw"});
 
         http.get(options, (res) => {
-            res.on("data", chunk => {
+            res.on("data", () => {
                 sinon.assert.calledWith(spy, path);
                 foxyserver.close();
                 done();
@@ -125,10 +124,10 @@ describe("Adding to front of mw stack on the fly", () => {
         var foxyserver = http.createServer(proxy).listen();
 
         var options = {
-            hostname: 'localhost',
+            hostname: "localhost",
             port: foxyserver.address().port,
             path: path,
-            method: 'GET',
+            method: "GET",
             headers: {
                 "accept": "text/html"
             }
@@ -141,9 +140,13 @@ describe("Adding to front of mw stack on the fly", () => {
             next();
         }, {id: "foxy-test-mw"});
 
-        proxy.stack.unshift({route: "/kittie", handle: function (req, res, next) {
-            res.end("SHANE");
-        }});
+        proxy.stack.unshift({
+            route: "/kittie",
+            handle: function (req, res, next) {
+                res.end("SHANE");
+                next();
+            }
+        });
 
         http.get(options, (res) => {
             res.on("data", chunk => {

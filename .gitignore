@@ -1,5 +1,6 @@
-node_modules
-.idea
-npm-log*
-npm-debug.log
 .coveralls.yml
+.idea
+npm-debug.log
+npm-log*
+node_modules
+test/specs

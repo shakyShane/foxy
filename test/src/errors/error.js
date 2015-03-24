@@ -1,22 +1,6 @@
-var foxy      = require("../../../index");
-var request   = require("supertest");
-var connect   = require("connect");
-var http      = require("http");
-var sinon     = require("sinon");
-var assert    = require("chai").assert;
-
-var output = `
-<!doctype html>
-<html lang="en-US">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-    Hi there
-</body>
-</html>
-`;
+var foxy  = require("../../../index");
+var http  = require("http");
+var sinon = require("sinon");
 
 describe("Error Logging", () => {
     it("should use custom error handler", done => {
@@ -28,15 +12,15 @@ describe("Error Logging", () => {
             }
         };
         path = "/";
-        proxy = foxy(`http://localhost:9898989898`, config).listen();
+        proxy = foxy("http://localhost:9898", config).listen();
 
         var options = {
-            hostname: 'localhost',
+            hostname: "localhost",
             port: proxy.address().port,
             path: path,
-            method: 'GET',
+            method: "GET",
             headers: {
-                "accept": "text/html"
+                accept: "text/html"
             }
         };
 

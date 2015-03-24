@@ -1,11 +1,9 @@
-var cli       = require("../../../cli");
-var request   = require("supertest");
-var connect   = require("connect");
-var http      = require("http");
-var assert    = require("chai").assert;
+var assert  = require("chai").assert;
+var cli     = require("../../../cli");
+var connect = require("connect");
+var http    = require("http");
 
-var output = `Some content`;
-var html = require("fs").readFileSync(__dirname + "/../../../test/fixtures/index1.html");
+var output = "Some content";
 
 describe("Running from command line", () => {
 
@@ -27,12 +25,12 @@ describe("Running from command line", () => {
         });
 
         var options = {
-            hostname: 'localhost',
+            hostname: "localhost",
             port: out.server.address().port,
             path: path,
-            method: 'GET',
+            method: "GET",
             headers: {
-                "accept": "text/html"
+                accept: "text/html"
             }
         };
 
@@ -64,12 +62,12 @@ describe("Running from command line", () => {
         });
 
         var options = {
-            hostname: 'localhost',
+            hostname: "localhost",
             port: 3001,
             path: path,
-            method: 'GET',
+            method: "GET",
             headers: {
-                "accept": "text/html"
+                accept: "text/html"
             }
         };
 

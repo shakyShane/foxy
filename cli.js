@@ -50,7 +50,7 @@ function handleCli (cli) {
         server: server,
         app:    app,
         urls:   urls
-    }
+    };
 }
 
 /**
