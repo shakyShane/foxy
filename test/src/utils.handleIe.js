@@ -52,7 +52,7 @@ describe("Adding accept headers for old IE", () => {
         var options = {
             hostname: "localhost",
             port: proxy.address().port,
-            path: path,
+            path,
             method: "GET",
             headers: {
                 "user-agent": ua
@@ -62,6 +62,58 @@ describe("Adding accept headers for old IE", () => {
         http.get(options, (res) => {
             res.on("data", chunk => {
                 assert.include(chunk.toString(), "Browser Sync");
+                done();
+            });
+            server.close();
+        });
+    });
+    it("e2e IE with Custom middlewares", (done) => {
+
+        var app, server, proxy;
+        var path = "/templates/page1.html";
+        app    = connect();
+
+        app.use(path, (req, res) => res.end(`
+        <html>
+        <head>
+
+        </head>
+        <body>
+            Hi there
+        </body>
+        </html>
+        `));
+
+        server = http.createServer(app).listen();
+        var sinon = require("sinon");
+        var spy   = sinon.spy();
+        proxy = foxy(`http://localhost:${server.address().port}`, {
+            rules: {
+                match: /Hi there/,
+                fn: match => "Browser Sync " + match
+            },
+            middleware: [
+                function (req, res, next) {
+                    spy(req.url);
+                    next();
+                }
+            ]
+        }).listen();
+
+        var options = {
+            hostname: "localhost",
+            port: proxy.address().port,
+            path,
+            method: "GET",
+            headers: {
+                "user-agent": ua
+            }
+        };
+
+        http.get(options, (res) => {
+            res.on("data", chunk => {
+                assert.include(chunk.toString(), "Browser Sync");
+                sinon.assert.called(spy);
                 done();
             });
             server.close();
