@@ -6,6 +6,7 @@
   "scripts": {
     "lint": "jshint *.js lib/*.js test/src/*.js test/src/*/*.js",
     "es6": "babel test/src --out-dir test/specs",
+    "es6-watch": "babel test/src --out-dir test/specs --watch",
     "unit": "npm run es6 && mocha --recursive test/specs",
     "cover": "npm run lint && istanbul cover _mocha --report lcovonly -- --timeout 10000 --recursive test/specs && istanbul-coveralls",
     "test": "npm run lint && npm run unit"
