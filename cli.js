@@ -60,13 +60,21 @@ function handleCli (cli) {
  */
 function getServer (scheme, app) {
 
-    if (scheme === "https") {
+    var server;
 
-        return https.createServer({
+    if (scheme === "https") {
+        server = https.createServer({
             key:  fs.readFileSync(path.resolve(__dirname, "test/fixtures/certs/server.key")),
             cert: fs.readFileSync(path.resolve(__dirname, "test/fixtures/certs/server.cert"))
         }, app);
+    } else {
+        server = http.createServer(app);
     }
 
-    return http.createServer(app);
+    /**
+     * Proxy web sockets
+     */
+    server.on("upgrade", app.handleUpgrade);
+
+    return server;
 }
