@@ -13,7 +13,7 @@ var https  = require("https");
  */
 if (!module.parent) {
     handleCli(meow({
-        help: fs.readFileSync(__dirname + "/help.txt", "utf8")
+        help: fs.readFileSync(path.join(__dirname, "/help.txt"), "utf8")
     }));
 }
 
