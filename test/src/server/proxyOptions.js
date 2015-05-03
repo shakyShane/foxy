@@ -1,6 +1,5 @@
 var foxy      = require("../../../index");
 var connect   = require("connect");
-var sinon     = require("sinon");
 var http      = require("http");
 var assert    = require("chai").assert;
 
