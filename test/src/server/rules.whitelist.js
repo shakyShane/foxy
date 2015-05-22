@@ -33,7 +33,7 @@ describe("Whitelisting certain paths", () => {
         app.use(path, (req, res) => res.end(output));
 
         server = http.createServer(app).listen();
-        proxy = foxy(`http://localhost:${server.address().port}`, config);
+        proxy = foxy(`http://localhost:${server.address().port}`, config).app;
     });
 
     after(() => server.close());

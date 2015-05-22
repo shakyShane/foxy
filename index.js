@@ -26,7 +26,7 @@ function create(target, userConfig) {
 
     var foxy    = new Foxy(config);
 
-    return foxy.app;
+    return foxy;
 }
 
 module.exports      = create;

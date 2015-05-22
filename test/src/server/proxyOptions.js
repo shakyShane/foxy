@@ -33,7 +33,7 @@ describe("Adding node-http-proxy options through configuration", () => {
             res.end(output);
         });
         server = http.createServer(app).listen();
-        proxyServer = foxy(`http://localhost:${server.address().port}`, config).listen();
+        proxyServer = foxy(`http://localhost:${server.address().port}`, config).app.listen();
         port = proxyServer.address().port;
         let options = {
             hostname: "localhost",

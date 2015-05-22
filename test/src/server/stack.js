@@ -19,7 +19,7 @@ describe("Accessing mw stack on the fly", () => {
 
         server = http.createServer(app).listen();
 
-        proxy = foxy(`http://localhost:${server.address().port}`);
+        proxy = foxy(`http://localhost:${server.address().port}`).app;
         var foxyserver = http.createServer(proxy).listen();
 
 
@@ -67,7 +67,7 @@ describe("Adding to mw stack on the fly", () => {
 
         server = http.createServer(app).listen();
 
-        proxy = foxy(`http://localhost:${server.address().port}`);
+        proxy = foxy(`http://localhost:${server.address().port}`).app;
         var foxyserver = http.createServer(proxy).listen();
 
 
@@ -119,7 +119,7 @@ describe("Adding to front of mw stack on the fly", () => {
                     }
                 }
             ]
-        });
+        }).app;
 
         var foxyserver = http.createServer(proxy).listen();
 

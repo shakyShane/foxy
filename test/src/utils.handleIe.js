@@ -47,7 +47,7 @@ describe("Adding accept headers for old IE", () => {
                 match: /Hi there/,
                 fn: match => "Browser Sync " + match
             }]
-        }).listen();
+        }).app.listen();
 
         var options = {
             hostname: "localhost",
@@ -98,7 +98,7 @@ describe("Adding accept headers for old IE", () => {
                     next();
                 }
             ]
-        }).listen();
+        }).app.listen();
 
         var options = {
             hostname: "localhost",

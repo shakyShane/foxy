@@ -29,7 +29,7 @@ describe("rewrite links", () => {
     after(() => server.close());
 
     it("http://localhost:", done => {
-        request(foxy(serverUrl))
+        request(foxy(serverUrl).app)
             .get("/links.html")
             .set("accept", "text/html")
             .expect(200)

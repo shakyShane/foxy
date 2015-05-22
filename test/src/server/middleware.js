@@ -37,7 +37,7 @@ describe("Running middlewares + html mods", () => {
         app    = connect();
         app.use(path, (req, res) => res.end(output));
         server = http.createServer(app).listen();
-        proxy = foxy(`http://localhost:${server.address().port}`, config).listen();
+        proxy = foxy(`http://localhost:${server.address().port}`, config).app.listen();
         var options = {
             hostname: "localhost",
             port: proxy.address().port,
@@ -74,7 +74,7 @@ describe("Running middlewares + html mods", () => {
         app    = connect();
         app.use(path, (req, res) => res.end(output));
         server = http.createServer(app).listen();
-        proxy = foxy(`http://localhost:${server.address().port}`, config).listen();
+        proxy = foxy(`http://localhost:${server.address().port}`, config).app.listen();
         var options = {
             hostname: "localhost",
             port: proxy.address().port,
@@ -91,6 +91,59 @@ describe("Running middlewares + html mods", () => {
                 done();
             });
             server.close();
+        });
+    });
+    it("should allow updating of rules on the fly", done => {
+        var config, app, server, proxy;
+        var path = "/templates/page1.html";
+        var spy = sinon.spy();
+        config = {
+            rules: [{
+                match: /Hi there/g,
+                fn: function () {
+                    return "BrowserSync";
+                }
+            }],
+            middleware: (req, res, next) => {
+                spy("called from mw");
+                next();
+            }
+        };
+        app    = connect();
+        app.use(path, (req, res) => res.end(output));
+        server = http.createServer(app).listen();
+        proxy = foxy(`http://localhost:${server.address().port}`, config);
+        var proxyserver = proxy.app.listen();
+
+        var options = {
+            hostname: "localhost",
+            port: proxyserver.address().port,
+            path: path,
+            method: "GET",
+            headers: {
+                accept: "text/html"
+            }
+        };
+        http.get(options, (res) => {
+
+            res.on("data", chunk => {
+
+                assert.include(chunk.toString(), "BrowserSync");
+                sinon.assert.calledWith(spy, "called from mw");
+
+                proxy.config.rules.push({
+                    match: "<title></title>",
+                    replace: "<title>Shane</title>"
+                });
+
+                http.get(options, (res) => {
+                    res.on("data", chunk => {
+                        assert.include(chunk.toString(), "<title>Shane</title>");
+                        server.close();
+                        done();
+                    });
+                });
+            });
         });
     });
 });

@@ -33,7 +33,7 @@ function handleCli (cli) {
     var url    = require("url").parse(cli.input[0]);
     var scheme = url.protocol === "https:" ? "https" : "http";
     var target = url.protocol + "//" + url.host;
-    var app    = foxy(target, cli.flags);
+    var app    = foxy(target, cli.flags).app;
     var server = getServer(scheme, app).listen(cli.flags.port);
     var port   = server.address().port;
     var urls   = [scheme + "://localhost:" + port];
