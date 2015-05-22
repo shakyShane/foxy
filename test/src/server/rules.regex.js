@@ -21,10 +21,10 @@ describe("giving custom regex rules", () => {
     var config, app, server, proxy, path;
     before(() => {
         config = {
-            rules: {
+            rules: [{
                 match: /Hi there/,
                 fn: match => "Browser Sync " + match
-            }
+            }]
         };
         path = "/test";
         app    = connect();

@@ -43,10 +43,10 @@ describe("Adding accept headers for old IE", () => {
         `));
         server = http.createServer(app).listen();
         proxy = foxy(`http://localhost:${server.address().port}`, {
-            rules: {
+            rules: [{
                 match: /Hi there/,
                 fn: match => "Browser Sync " + match
-            }
+            }]
         }).listen();
 
         var options = {
@@ -88,10 +88,10 @@ describe("Adding accept headers for old IE", () => {
         var sinon = require("sinon");
         var spy   = sinon.spy();
         proxy = foxy(`http://localhost:${server.address().port}`, {
-            rules: {
+            rules: [{
                 match: /Hi there/,
                 fn: match => "Browser Sync " + match
-            },
+            }],
             middleware: [
                 function (req, res, next) {
                     spy(req.url);

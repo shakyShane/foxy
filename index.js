@@ -10,7 +10,7 @@
  * @param {Object} [userConfig]
  * @returns {http.Server}
  */
-function foxy(target, userConfig) {
+function create(target, userConfig) {
     "use strict";
 
     /**
@@ -22,15 +22,12 @@ function foxy(target, userConfig) {
     /**
      * Create a connect app
      */
-    var app    = require("./lib/server")(config);
+    var Foxy    = require("./lib/server");
 
-    /**
-     * Add any user-provided/default middlewares
-     */
-    config.get("middleware").forEach(app.use);
+    var foxy    = new Foxy(config);
 
-    return app;
+    return foxy.app;
 }
 
-module.exports      = foxy;
-module.exports.init = foxy; // backwards compatibility
+module.exports      = create;
+module.exports.init = create; // backwards compatibility

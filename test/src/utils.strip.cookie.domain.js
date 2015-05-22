@@ -32,6 +32,7 @@ describe("Stripping domain from cookies", () => {
             });
     });
 });
+
 describe("NOT Stripping domain from cookies", () => {
     var app, server, proxy;
     before(() => {

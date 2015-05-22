@@ -43,7 +43,8 @@ describe("Whitelisting certain paths", () => {
             .get(path)
             .expect(200)
             .end((err, res) => {
-                assert.include(res.text, "Browser Sync");
+                console.log(res.text);
+                assert.include(res.text, "Browser Sync Hi there");
                 done();
             });
     });
