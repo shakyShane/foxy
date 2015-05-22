@@ -12,7 +12,7 @@ describe("Error Logging", () => {
             }
         };
         path = "/";
-        proxy = foxy("http://localhost:9898", config).app.listen();
+        proxy = foxy("http://localhost:9898", config).listen();
 
         var options = {
             hostname: "localhost",

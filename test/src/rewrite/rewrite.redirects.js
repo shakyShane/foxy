@@ -23,7 +23,7 @@ describe("Rewrite redirect headers", () => {
             res.end();
             next();
         });
-        proxy = foxy("http://127.0.0.1:" + port).app.listen();
+        proxy = foxy("http://127.0.0.1:" + port).listen();
         done();
     });
 

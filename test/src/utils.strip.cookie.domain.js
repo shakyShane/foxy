@@ -14,7 +14,7 @@ describe("Stripping domain from cookies", () => {
             res.end("Some output");
         });
         server = http.createServer(app).listen();
-        proxy = foxy(`http://localhost:${server.address().port}`, config).app;
+        proxy = foxy(`http://localhost:${server.address().port}`, config);
     });
     after(function () {
         server.close();
@@ -42,7 +42,7 @@ describe("NOT Stripping domain from cookies", () => {
             res.end("Some output");
         });
         server = http.createServer(app).listen();
-        proxy = foxy(`http://localhost:${server.address().port}`, {cookies: {stripDomain: false}}).app;
+        proxy = foxy(`http://localhost:${server.address().port}`, {cookies: {stripDomain: false}});
     });
     after(() => {
         server.close();

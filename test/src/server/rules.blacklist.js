@@ -31,7 +31,7 @@ describe("Ignoring certain paths", () => {
         app  = connect();
         app.use(path, (req, res) => res.end(output));
         server = http.createServer(app).listen();
-        proxy = foxy(`http://localhost:${server.address().port}`, config).app;
+        proxy = foxy(`http://localhost:${server.address().port}`, config);
     });
 
     after(() => server.close());

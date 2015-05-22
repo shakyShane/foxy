@@ -37,7 +37,7 @@ describe("Running middlewares + html mods", () => {
         app    = connect();
         app.use(path, (req, res) => res.end(output));
         server = http.createServer(app).listen();
-        proxy = foxy(`http://localhost:${server.address().port}`, config).app.listen();
+        proxy = foxy(`http://localhost:${server.address().port}`, config).listen();
         var options = {
             hostname: "localhost",
             port: proxy.address().port,
@@ -74,7 +74,7 @@ describe("Running middlewares + html mods", () => {
         app    = connect();
         app.use(path, (req, res) => res.end(output));
         server = http.createServer(app).listen();
-        proxy = foxy(`http://localhost:${server.address().port}`, config).app.listen();
+        proxy = foxy(`http://localhost:${server.address().port}`, config).listen();
         var options = {
             hostname: "localhost",
             port: proxy.address().port,
@@ -112,7 +112,7 @@ describe("Running middlewares + html mods", () => {
         app    = connect();
         app.use(path, (req, res) => res.end(output));
         server = http.createServer(app).listen();
-        proxy = foxy(`http://localhost:${server.address().port}`, config);
+        proxy = foxy.create(`http://localhost:${server.address().port}`, config);
         var proxyserver = proxy.app.listen();
 
         var options = {

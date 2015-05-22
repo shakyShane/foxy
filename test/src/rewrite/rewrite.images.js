@@ -32,7 +32,7 @@ describe("Responsive images solution", function(){
     after(() => server.close());
 
     it("should rewrite multiple sources", function (done) {
-        request(foxy(serverUrl).app)
+        request(foxy(serverUrl))
             .get("/links.html")
             .set("accept", "text/html")
             .expect(200)

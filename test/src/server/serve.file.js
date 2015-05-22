@@ -14,7 +14,7 @@ describe("Running Serving static files", () => {
         app    = connect();
         app.use(path, (req, res) => res.end(output));
         server = http.createServer(app).listen();
-        proxy = foxy(`http://localhost:${server.address().port}`).app;
+        proxy = foxy(`http://localhost:${server.address().port}`);
         var foxyserver = http.createServer(proxy).listen();
 
         var options = {
@@ -54,7 +54,7 @@ describe("Running middleware and calling next", () => {
         app    = connect();
         app.use(path, (req, res) => res.end(output));
         server = http.createServer(app).listen();
-        proxy = foxy(`http://localhost:${server.address().port}`).app;
+        proxy = foxy(`http://localhost:${server.address().port}`);
         var foxyserver = http.createServer(proxy).listen();
 
         var spy = sinon.spy();
@@ -96,7 +96,7 @@ describe("Running middleware and calling next", () => {
         app    = connect();
         app.use(path, (req, res) => res.end(output));
         server = http.createServer(app).listen();
-        proxy = foxy(`http://localhost:${server.address().port}`).app;
+        proxy = foxy(`http://localhost:${server.address().port}`);
         var foxyserver = http.createServer(proxy).listen();
         var spy = sinon.spy();
 

@@ -8,10 +8,9 @@
 /**
  * @param {String} target - a url such as http://www.bbc.co.uk or http://localhost:8181
  * @param {Object} [userConfig]
- * @returns {http.Server}
+ * @returns {Foxy}
  */
 function create(target, userConfig) {
-    "use strict";
 
     /**
      * Merge user config with defaults
@@ -24,10 +23,13 @@ function create(target, userConfig) {
      */
     var Foxy    = require("./lib/server");
 
-    var foxy    = new Foxy(config);
-
-    return foxy;
+    return new Foxy(config);
 }
 
-module.exports      = create;
-module.exports.init = create; // backwards compatibility
+module.exports = function (target, userConfig) {
+    return create(target, userConfig).app;
+};
+
+module.exports.create = function (target, userConfig) {
+    return create(target, userConfig);
+};
