@@ -161,17 +161,41 @@ describe("Rewriting Domains", () => {
         });
         it("should use the regex to replace links that contain port + ", () => {
             var input = `
-<a href="http://example.com:1234/foo">Link 1</a>
+<!--//<a href="http://example.com:1234/foo">Link 1</a>-->
 <a href="http://example.com.gov/foo">Link 1</a>
 `;
             var expected = `
-<a href="//${proxyUrl}/foo">Link 1</a>
+<!--//<a href="//${proxyUrl}/foo">Link 1</a>-->
 <a href="http://example.com.gov/foo">Link 1</a>
 `;
 
             var rewrite  = utils.rewriteLinks({hostname: "example.com", port: 1234}, proxyUrl);
             var actual   = input.replace(rewrite.match, rewrite.fn);
 
+            assert.equal(actual, expected);
+        });
+        it("should use the regex to replace links that contain port + ", () => {
+            var input = `
+<!doctype html>
+<html><body>
+<p>This is an experiment.dev</p>
+<p><img src="/images/experiment.dev/example.jpg"></p>
+<!-- This experiment.dev should prove interesting -->
+<p><a href="http://experiment.dev/example.html">Link</a></p>
+</body></html>
+`;
+            var expected = `
+<!doctype html>
+<html><body>
+<p>This is an experiment.dev</p>
+<p><img src="/images/experiment.dev/example.jpg"></p>
+<!-- This experiment.dev should prove interesting -->
+<p><a href="//${proxyUrl}/example.html">Link</a></p>
+</body></html>
+`;
+
+            var rewrite  = utils.rewriteLinks({hostname: "experiment.dev"}, proxyUrl);
+            var actual   = input.replace(rewrite.match, rewrite.fn);
             assert.equal(actual, expected);
         });
         it("should not replace when host + subdomain ", () => {
