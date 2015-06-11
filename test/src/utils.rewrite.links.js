@@ -198,6 +198,15 @@ describe("Rewriting Domains", () => {
             var actual   = input.replace(rewrite.match, rewrite.fn);
             assert.equal(actual, expected);
         });
+        it("should use the regex to replace links that contain port + ", () => {
+            var input = `
+<link href="/sites/default/themes/mclinic/css/styles.css" media="screen" rel="stylesheet">
+`;
+
+            var rewrite  = utils.rewriteLinks({hostname: "mclinic"}, proxyUrl);
+            var actual   = input.replace(rewrite.match, rewrite.fn);
+            assert.equal(actual, input);
+        });
         it("should not replace when host + subdomain ", () => {
             var input = `<a href="http://assets.cdn.example.com:1234/foo">Link 1</a>`;
             var rewrite  = utils.rewriteLinks({hostname: "example.com", port: 1234}, proxyUrl);
