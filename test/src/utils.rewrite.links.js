@@ -213,5 +213,13 @@ describe("Rewriting Domains", () => {
             var actual   = input.replace(rewrite.match, rewrite.fn);
             assert.equal(actual, input);
         });
+        it("should not remove trailing slash", () => {
+            var input    = `<a href="http://example.com:1234/foo/">Link 1</a>`;
+            var expected = `<a href="//${proxyUrl}/foo/">Link 1</a>`;
+            var rewrite  = utils.rewriteLinks({hostname: "example.com", port: 1234}, proxyUrl);
+            var actual   = input.replace(rewrite.match, rewrite.fn);
+            console.log(actual);
+            assert.equal(actual, expected);
+        });
     });
 });
