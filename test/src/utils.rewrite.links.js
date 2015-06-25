@@ -30,7 +30,7 @@ describe("Rewriting Domains", () => {
         });
         it("should use the regex to replace links (2)", () => {
             var actual = testRegex("<a href='http://example.com'></a>");
-            var expected = "<a href='//192.168.0.4:3002/'></a>";
+            var expected = "<a href='//192.168.0.4:3002'></a>";
             assert.equal(actual, expected);
         });
         it("should use the regex to replace links (23)", () => {
@@ -61,7 +61,7 @@ describe("Rewriting Domains", () => {
         it("should use the regex to replace links (6)", () => {
             /*jshint ignore:start*/
             var actual = testRegex('<a href="http://example.com" class="active" title="Home">Home</a><a href="http://example.com/information" class="" title="Info">Info</a>');
-            var expected = '<a href="//192.168.0.4:3002/" class="active" title="Home">Home</a><a href="//192.168.0.4:3002/information" class="" title="Info">Info</a>';
+            var expected = '<a href="//192.168.0.4:3002" class="active" title="Home">Home</a><a href="//192.168.0.4:3002/information" class="" title="Info">Info</a>';
             assert.equal(actual, expected);
             /*jshint ignore:end*/
         });
@@ -85,12 +85,12 @@ describe("Rewriting Domains", () => {
         });
         it("should use the regex to replace links (1)", () => {
             var actual = testRegex("<a href='http://localhost:8000'></a>");
-            var expected = "<a href='//192.168.0.4:3002/'></a>";
+            var expected = "<a href='//192.168.0.4:3002'></a>";
             assert.equal(actual, expected);
         });
         it("should use the regex to replace links (1)", () => {
             var actual = testRegex("<a href='http://localhost:8000'></a>");
-            var expected = "<a href='//192.168.0.4:3002/'></a>";
+            var expected = "<a href='//192.168.0.4:3002'></a>";
             assert.equal(actual, expected);
         });
         it("should use the regex to replace links (2)", () => {
@@ -217,6 +217,20 @@ describe("Rewriting Domains", () => {
             var input    = `<a href="http://example.com:1234/foo/">Link 1</a>`;
             var expected = `<a href="//${proxyUrl}/foo/">Link 1</a>`;
             var rewrite  = utils.rewriteLinks({hostname: "example.com", port: 1234}, proxyUrl);
+            var actual   = input.replace(rewrite.match, rewrite.fn);
+            assert.equal(actual, expected);
+        });
+        it("should not greedy match when not inside attr - with paths", () => {
+            var input    = `<a href="https://example.com/calendar/2015/06/24/20471/">https://example.com/calendar/2015/06/24/20471/</a></p></div></li></ol></td><td  class="cal-current-month">`;
+            var expected = `<a href="//${proxyUrl}/calendar/2015/06/24/20471/">//${proxyUrl}/calendar/2015/06/24/20471/</a></p></div></li></ol></td><td  class="cal-current-month">`;
+            var rewrite  = utils.rewriteLinks({hostname: "example.com"}, proxyUrl);
+            var actual   = input.replace(rewrite.match, rewrite.fn);
+            assert.equal(actual, expected);
+        });
+        it("should not greedy match when not inside attr", () => {
+            var input    = `<a href="https://example.com/">https://example.com/</a></p></div></li></ol></td><td  class="cal-current-month">`;
+            var expected = `<a href="//${proxyUrl}/">//${proxyUrl}/</a></p></div></li></ol></td><td  class="cal-current-month">`;
+            var rewrite  = utils.rewriteLinks({hostname: "example.com"}, proxyUrl);
             var actual   = input.replace(rewrite.match, rewrite.fn);
             assert.equal(actual, expected);
         });

@@ -8,9 +8,9 @@ module.exports = {
         });
     },
     expectedUrl: (base, host) => {
-        return base.replace("URL", `//${host}/`);
+        return base.replace("URL", `//${host}`);
     },
     stripSchema: (host) => {
-        return `//${host}/`;
+        return `//${host}`;
     }
 };
