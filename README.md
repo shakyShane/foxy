@@ -65,6 +65,23 @@ var proxy = foxy("http://wordpress.dev", {
 }).listen(8000);
 ```
 
+## proxyResponse middleware
+
+You can add middleware-like functions which process the proxy response.
+
+```js
+var foxy = require("foxy");
+
+var config = {
+    proxyRes: [
+        function(proxyRes, req, config) {
+            // do something with the proxyRes object which comes from node-http-proxy
+        }
+    ]
+};
+
+var proxy = foxy("http://localhost:3000", config).listen(8000);
+```
 
 #TODO
 
