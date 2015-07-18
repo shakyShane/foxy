@@ -12,12 +12,12 @@ describe("Removing Headers", () => {
         };
     });
     it("should delete a single header", () => {
-        utils.removeHeaders(headers, ["content-encoding"]);
+        utils.removeExcludedHeaders({headers}, {}, {excludedHeaders:["content-encoding"]});
         var actual = headers.hasOwnProperty("content-encoding");
         assert.isFalse(actual);
     });
     it("should delete mulitple headers", () => {
-        utils.removeHeaders(headers, ["content-encoding", "content-length"]);
+        utils.removeExcludedHeaders({headers}, {}, {excludedHeaders:["content-encoding", "content-length"]});
         var actual = headers.hasOwnProperty("content-encoding") || headers.hasOwnProperty("content-length");
         assert.isFalse(actual);
     });
