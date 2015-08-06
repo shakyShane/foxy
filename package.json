@@ -32,7 +32,7 @@
     "http-proxy": "^1.9.0",
     "lodash.merge": "^3.3.1",
     "meow": "^3.1.0",
-    "resp-modifier": "^5.0.0"
+    "resp-modifier": "^4.0.2"
   },
   "devDependencies": {
     "babel": "^4.7.16",
