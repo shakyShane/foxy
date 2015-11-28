@@ -24,7 +24,7 @@ describe("rewriting cookies", () => {
             .set("accept", "text/html")
             .expect(200)
             .end((err, res) => {
-                assert.equal(res.headers['set-cookie'][0], "pin-sha256=\"WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=\"; HttpOnly")
+                assert.equal(res.headers["set-cookie"][0], "pin-sha256=\"WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=\"; HttpOnly");
                 done();
             });
     });
