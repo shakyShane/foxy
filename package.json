@@ -4,7 +4,7 @@
   "description": "Proxy with response modding",
   "main": "index.js",
   "scripts": {
-    "lint": "jshint *.js lib/*.js test/src/*.js test/src/*/*.js",
+    "lint": "jshint *.js lib/*.js test/specs/*.js test/specs/*/*.js",
     "unit": "mocha --recursive test/specs",
     "cover": "npm run lint && istanbul cover _mocha --report lcovonly -- --timeout 10000 --recursive test/specs && istanbul-coveralls",
     "test": "npm run lint && npm run unit"
